@@ -1,0 +1,218 @@
+/* ==========================================================
+   CRYPTBYTE SOLUTIONS - Services App Stylesheet
+   Unique styles for services app (Hero Split, Services Grid, Process Steps, Tech Stack)
+   ========================================================== */
+
+/* ========================================================
+   SERVICES PAGE
+   ======================================================== */
+
+/* Services Split (Hero Visual Split) */
+.solutions-hero-split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-2xl);
+  align-items: center;
+}
+
+/* Services Detail Grid */
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-lg);
+}
+
+.service-detail-card {
+  background: var(--clr-bg-card);
+  border: 1px solid var(--clr-border);
+  border-radius: var(--radius-xl);
+  padding: var(--space-xl);
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--space-lg);
+  align-items: flex-start;
+  transition: all var(--transition-base);
+  position: relative;
+  overflow: hidden;
+}
+
+.service-detail-card::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 2px;
+  background: var(--grad-gold);
+  transform: scaleX(0);
+  transition: transform var(--transition-base);
+}
+
+.service-detail-card:hover {
+  border-color: rgba(240, 165, 0, 0.25);
+  background: var(--clr-bg-card-hover);
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-card);
+}
+
+.service-detail-card:hover::after { transform: scaleX(1); }
+
+.service-detail-card__icon {
+  width: 60px;
+  height: 60px;
+  border-radius: var(--radius-lg);
+  background: rgba(30, 144, 255, 0.08);
+  border: 1px solid var(--clr-border-blue);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--clr-blue-light);
+  flex-shrink: 0;
+  transition: all var(--transition-base);
+}
+
+.service-detail-card:hover .service-detail-card__icon {
+  background: rgba(240, 165, 0, 0.1);
+  border-color: var(--clr-border);
+  color: var(--clr-gold);
+  box-shadow: var(--shadow-glow-gold);
+}
+
+.service-detail-card__title {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--clr-text-primary);
+  margin-bottom: var(--space-sm);
+}
+
+.service-detail-card__desc {
+  font-size: 0.85rem;
+  color: var(--clr-text-secondary);
+  line-height: 1.7;
+  margin-bottom: var(--space-md);
+}
+
+.service-detail-card__features {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.service-detail-card__feature {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  font-size: 0.8rem;
+  color: var(--clr-text-muted);
+}
+
+.service-detail-card__feature::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--clr-gold);
+  flex-shrink: 0;
+}
+
+/* Process Steps */
+.process-steps {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-lg);
+  position: relative;
+}
+
+.process-steps::before {
+  content: '';
+  position: absolute;
+  top: 36px;
+  left: calc(12.5% + 24px);
+  right: calc(12.5% + 24px);
+  height: 2px;
+  background: linear-gradient(90deg, var(--clr-gold), var(--clr-blue-light));
+  opacity: 0.3;
+}
+
+.process-step {
+  text-align: center;
+  position: relative;
+}
+
+.process-step__num {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: var(--clr-bg-card);
+  border: 2px solid var(--clr-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: var(--clr-gold);
+  margin: 0 auto var(--space-md);
+  transition: all var(--transition-base);
+  position: relative;
+  z-index: 1;
+}
+
+.process-step:hover .process-step__num {
+  border-color: var(--clr-gold);
+  background: rgba(240, 165, 0, 0.08);
+  box-shadow: var(--shadow-glow-gold);
+}
+
+.process-step__title {
+  font-family: var(--font-display);
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--clr-text-primary);
+  margin-bottom: 6px;
+}
+
+.process-step__body {
+  font-size: 0.8rem;
+  color: var(--clr-text-muted);
+  line-height: 1.6;
+}
+
+/* Tech Stack */
+.tech-stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+  justify-content: flex-start;
+}
+
+.tech-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--clr-border);
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--clr-text-secondary);
+  background: var(--clr-bg-card);
+  transition: all var(--transition-fast);
+}
+
+.tech-badge:hover {
+  border-color: var(--clr-gold);
+  color: var(--clr-gold);
+  background: rgba(240, 165, 0, 0.06);
+}
+
+/* ========================================================
+   SERVICES RESPONSIVE
+   ======================================================== */
+@media (max-width: 1024px) {
+  .solutions-hero-split { grid-template-columns: 1fr; }
+  .services-grid { grid-template-columns: 1fr; }
+  .process-steps { grid-template-columns: repeat(2, 1fr); }
+  .process-steps::before { display: none; }
+}
+

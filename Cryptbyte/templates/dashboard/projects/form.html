@@ -1,0 +1,135 @@
+{% extends "dashboard/base_dashboard.html" %}
+{% load static %}
+
+{% block topbar_actions %}
+  <a href="{% url 'dashboard:project_list' %}" class="btn btn--outline btn--sm">← Back to Projects</a>
+{% endblock %}
+
+{% block dash_content %}
+
+  <div class="dash-panel dash-panel--form" data-animate>
+    <div class="dash-panel__header">
+      <div>
+        <h2 class="dash-panel__title">{{ page_title }}</h2>
+        <p class="dash-panel__sub">Configure project case studies, client summaries, and tech stack tags.</p>
+      </div>
+    </div>
+
+    <form method="post" enctype="multipart/form-data" class="dash-form" novalidate>
+      {% csrf_token %}
+
+      {% if form.errors %}
+        <div class="dash-alert dash-alert--error" role="alert">
+          <span class="dash-alert__dot" aria-hidden="true"></span>
+          <span>Please review the errors highlighted below and correct them.</span>
+        </div>
+      {% endif %}
+
+      <div class="form-grid">
+
+        <!-- Title -->
+        <div class="form-group form-group--full">
+          <label class="form-label" for="{{ form.title.id_for_label }}">
+            Project Title <span style="color:var(--clr-gold);">*</span>
+          </label>
+          {{ form.title }}
+          {% if form.title.errors %}<span class="form-error">{{ form.title.errors.0 }}</span>{% endif %}
+        </div>
+
+        <!-- Slug -->
+        <div class="form-group">
+          <label class="form-label" for="{{ form.slug.id_for_label }}">
+            URL Slug <span style="color:var(--clr-gold);">*</span>
+          </label>
+          {{ form.slug }}
+          {% if form.slug.errors %}<span class="form-error">{{ form.slug.errors.0 }}</span>{% endif %}
+        </div>
+
+        <!-- Category -->
+        <div class="form-group">
+          <label class="form-label" for="{{ form.category.id_for_label }}">Category</label>
+          {{ form.category }}
+          {% if form.category.errors %}<span class="form-error">{{ form.category.errors.0 }}</span>{% endif %}
+        </div>
+
+        <!-- Tagline -->
+        <div class="form-group form-group--full">
+          <label class="form-label" for="{{ form.tagline.id_for_label }}">Tagline / Short Summary</label>
+          {{ form.tagline }}
+          {% if form.tagline.errors %}<span class="form-error">{{ form.tagline.errors.0 }}</span>{% endif %}
+        </div>
+
+        <!-- Image Upload -->
+        <div class="form-group form-group--full">
+          <label class="form-label" for="{{ form.image.id_for_label }}">Project Graphic / Screenshot</label>
+          {% if project.image %}
+            <div class="current-image-preview">
+              <img src="{{ project.image.url }}" alt="Current project image" class="dash-preview-img" />
+              <span class="form-hint">Current image attached. Upload a new file below to replace it.</span>
+            </div>
+          {% endif %}
+          {{ form.image }}
+          {% if form.image.errors %}<span class="form-error">{{ form.image.errors.0 }}</span>{% endif %}
+        </div>
+
+        <!-- Stack -->
+        <div class="form-group form-group--full">
+          <label class="form-label" for="{{ form.stack.id_for_label }}">Technologies Used</label>
+          {{ form.stack }}
+          <span class="form-hint">Comma-separated: Python, Django, React, Docker, TensorFlow</span>
+          {% if form.stack.errors %}<span class="form-error">{{ form.stack.errors.0 }}</span>{% endif %}
+        </div>
+
+        <!-- Links -->
+        <div class="form-group">
+          <label class="form-label" for="{{ form.live_url.id_for_label }}">Live URL</label>
+          {{ form.live_url }}
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="{{ form.github_url.id_for_label }}">GitHub Repository URL</label>
+          {{ form.github_url }}
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="{{ form.order.id_for_label }}">Display Sort Order</label>
+          {{ form.order }}
+        </div>
+
+        <!-- Description -->
+        <div class="form-group form-group--full">
+          <label class="form-label" for="{{ form.description.id_for_label }}">
+            Detailed Description <span style="color:var(--clr-gold);">*</span>
+          </label>
+          {{ form.description }}
+          {% if form.description.errors %}<span class="form-error">{{ form.description.errors.0 }}</span>{% endif %}
+        </div>
+
+        <!-- Options -->
+        <div class="form-group form-group--full form-group--inline">
+          <label class="form-checkbox-label">
+            {{ form.is_featured }}
+            <span>Mark as Featured Project</span>
+          </label>
+
+          <label class="form-checkbox-label" style="margin-left:2rem;">
+            {{ form.is_published }}
+            <span>Published (Visible publicly on portfolio)</span>
+          </label>
+        </div>
+
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="form-actions">
+        <button type="submit" class="btn btn--gold">
+          {% if is_edit %}Save Changes{% else %}Add Project{% endif %} &nbsp;→
+        </button>
+        <a href="{% url 'dashboard:project_list' %}" class="btn btn--outline">Cancel</a>
+      </div>
+
+    </form>
+  </div>
+
+{% endblock %}
+

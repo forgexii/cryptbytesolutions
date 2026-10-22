@@ -1,0 +1,187 @@
+{% extends "dashboard/base_dashboard.html" %}
+{% load static %}
+
+{% block topbar_actions %}
+  <a href="{% url 'dashboard:solution_list' %}" class="btn btn--outline btn--sm">← Back to Solutions</a>
+{% endblock %}
+
+{% block dash_content %}
+
+  <div class="dash-panel dash-panel--form" data-animate>
+    <div class="dash-panel__header">
+      <div>
+        <h2 class="dash-panel__title">{{ page_title }}</h2>
+        <p class="dash-panel__sub">Configure solution specifications, metrics, architecture, and roadmap items.</p>
+      </div>
+    </div>
+
+    <form method="post" enctype="multipart/form-data" class="dash-form" novalidate>
+      {% csrf_token %}
+
+      {% if form.errors %}
+        <div class="dash-alert dash-alert--error" role="alert">
+          <span class="dash-alert__dot" aria-hidden="true"></span>
+          <span>Please review the errors highlighted below and correct them.</span>
+        </div>
+      {% endif %}
+
+      <div class="form-grid">
+
+        <!-- Title -->
+        <div class="form-group form-group--full">
+          <label class="form-label" for="{{ form.title.id_for_label }}">
+            Solution Title <span style="color:var(--clr-gold);">*</span>
+          </label>
+          {{ form.title }}
+          {% if form.title.errors %}<span class="form-error">{{ form.title.errors.0 }}</span>{% endif %}
+        </div>
+
+        <!-- Slug -->
+        <div class="form-group">
+          <label class="form-label" for="{{ form.slug.id_for_label }}">
+            URL Slug <span style="color:var(--clr-gold);">*</span>
+          </label>
+          {{ form.slug }}
+          {% if form.slug.errors %}<span class="form-error">{{ form.slug.errors.0 }}</span>{% endif %}
+        </div>
+
+        <!-- Category & Icon -->
+        <div class="form-group">
+          <label class="form-label" for="{{ form.category.id_for_label }}">Category</label>
+          {{ form.category }}
+          {% if form.category.errors %}<span class="form-error">{{ form.category.errors.0 }}</span>{% endif %}
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="{{ form.icon_type.id_for_label }}">Icon Type</label>
+          {{ form.icon_type }}
+          {% if form.icon_type.errors %}<span class="form-error">{{ form.icon_type.errors.0 }}</span>{% endif %}
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="{{ form.order.id_for_label }}">Display Sort Order</label>
+          {{ form.order }}
+          {% if form.order.errors %}<span class="form-error">{{ form.order.errors.0 }}</span>{% endif %}
+        </div>
+
+        <!-- Image Upload -->
+        <div class="form-group form-group--full">
+          <label class="form-label" for="{{ form.image.id_for_label }}">Featured Solution Banner / Graphic</label>
+          {% if solution.image %}
+            <div class="current-image-preview">
+              <img src="{{ solution.image.url }}" alt="Current solution image" class="dash-preview-img" />
+              <span class="form-hint">Current image attached. Upload a new file below to replace it.</span>
+            </div>
+          {% endif %}
+          {{ form.image }}
+          {% if form.image.errors %}<span class="form-error">{{ form.image.errors.0 }}</span>{% endif %}
+        </div>
+
+        <!-- Tagline -->
+        <div class="form-group form-group--full">
+          <label class="form-label" for="{{ form.tagline.id_for_label }}">
+            Tagline Proposition <span style="color:var(--clr-gold);">*</span>
+          </label>
+          {{ form.tagline }}
+          {% if form.tagline.errors %}<span class="form-error">{{ form.tagline.errors.0 }}</span>{% endif %}
+        </div>
+
+        <!-- Short Description -->
+        <div class="form-group form-group--full">
+          <label class="form-label" for="{{ form.short_desc.id_for_label }}">
+            Short Description <span style="color:var(--clr-gold);">*</span>
+          </label>
+          {{ form.short_desc }}
+          <span class="form-hint">Shown on solutions catalog cards.</span>
+          {% if form.short_desc.errors %}<span class="form-error">{{ form.short_desc.errors.0 }}</span>{% endif %}
+        </div>
+
+        <!-- Technologies -->
+        <div class="form-group form-group--full">
+          <label class="form-label" for="{{ form.technologies.id_for_label }}">Technologies Employed</label>
+          {{ form.technologies }}
+          <span class="form-hint">Comma-separated: Python, Celery, Redis, Docker, PostgreSQL</span>
+          {% if form.technologies.errors %}<span class="form-error">{{ form.technologies.errors.0 }}</span>{% endif %}
+        </div>
+
+        <!-- Specifications Sidebar Fields -->
+        <div class="form-group">
+          <label class="form-label" for="{{ form.timeline.id_for_label }}">Typical Timeline</label>
+          {{ form.timeline }}
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="{{ form.delivery_model.id_for_label }}">Delivery Model</label>
+          {{ form.delivery_model }}
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="{{ form.target_industries.id_for_label }}">Target Industries</label>
+          {{ form.target_industries }}
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="{{ form.deployment.id_for_label }}">Deployment Model</label>
+          {{ form.deployment }}
+        </div>
+
+        <div class="form-group form-group--full">
+          <label class="form-label" for="{{ form.compliance.id_for_label }}">Compliance Standards</label>
+          {{ form.compliance }}
+        </div>
+
+        <!-- Overview -->
+        <div class="form-group form-group--full">
+          <label class="form-label" for="{{ form.overview.id_for_label }}">Strategic Overview Narrative</label>
+          {{ form.overview }}
+          {% if form.overview.errors %}<span class="form-error">{{ form.overview.errors.0 }}</span>{% endif %}
+        </div>
+
+        <!-- Structured Data in JSON -->
+        <div class="form-group form-group--full">
+          <label class="form-label" for="{{ form.metrics_json.id_for_label }}">Key Metrics (JSON Array)</label>
+          {{ form.metrics_json }}
+          <span class="form-hint">Format: [{"value": "85%", "label": "Time Saved", "desc": "Reduced operational hours"}]</span>
+        </div>
+
+        <div class="form-group form-group--full">
+          <label class="form-label" for="{{ form.challenges_json.id_for_label }}">Challenges &amp; Solutions Matrix (JSON Array)</label>
+          {{ form.challenges_json }}
+          <span class="form-hint">Format: [{"problem": "Data Silos", "problem_desc": "...", "solution": "API Pipelines", "solution_desc": "..."}]</span>
+        </div>
+
+        <div class="form-group form-group--full">
+          <label class="form-label" for="{{ form.capabilities_json.id_for_label }}">Core Capabilities (JSON Array)</label>
+          {{ form.capabilities_json }}
+          <span class="form-hint">Format: [{"title": "Event Orchestration", "desc": "Trigger asynchronous workflows..."}]</span>
+        </div>
+
+        <div class="form-group form-group--full">
+          <label class="form-label" for="{{ form.roadmap_json.id_for_label }}">Implementation Roadmap (JSON Array)</label>
+          {{ form.roadmap_json }}
+          <span class="form-hint">Format: [{"step": "01", "phase": "Discovery", "summary": "Map operational dependencies..."}]</span>
+        </div>
+
+        <!-- Publish Toggle -->
+        <div class="form-group form-group--full form-group--inline">
+          <label class="form-checkbox-label">
+            {{ form.is_published }}
+            <span>Active (Visible publicly on site)</span>
+          </label>
+        </div>
+
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="form-actions">
+        <button type="submit" class="btn btn--gold">
+          {% if is_edit %}Save Changes{% else %}Add Solution{% endif %} &nbsp;→
+        </button>
+        <a href="{% url 'dashboard:solution_list' %}" class="btn btn--outline">Cancel</a>
+      </div>
+
+    </form>
+  </div>
+
+{% endblock %}
+

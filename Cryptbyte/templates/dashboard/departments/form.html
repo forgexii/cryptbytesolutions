@@ -1,0 +1,88 @@
+{% extends "dashboard/base_dashboard.html" %}
+{% load static %}
+
+{% block topbar_actions %}
+  <a href="{% url 'dashboard:department_list' %}" class="btn btn--outline btn--sm">← Back to Overview</a>
+{% endblock %}
+
+{% block dash_content %}
+
+  <div class="dash-panel dash-panel--form" data-animate>
+    <div class="dash-panel__header">
+      <div>
+        <h2 class="dash-panel__title">{{ page_title }}</h2>
+        <p class="dash-panel__sub">Configure organizational metadata and technical grouping.</p>
+      </div>
+    </div>
+
+    <form method="post" enctype="multipart/form-data" class="dash-form" novalidate>
+      {% csrf_token %}
+
+      {% if form.errors %}
+        <div class="dash-alert dash-alert--error" role="alert">
+          <span class="dash-alert__dot" aria-hidden="true"></span>
+          <span>Please review the errors highlighted below and correct them.</span>
+        </div>
+      {% endif %}
+
+      <div class="form-grid">
+
+        <!-- Name -->
+        <div class="form-group">
+          <label class="form-label" for="{{ form.name.id_for_label }}">
+            {{ type }} Name <span style="color:var(--clr-gold);">*</span>
+          </label>
+          {{ form.name }}
+          {% if form.name.errors %}<span class="form-error">{{ form.name.errors.0 }}</span>{% endif %}
+        </div>
+
+        <!-- Slug -->
+        <div class="form-group">
+          <label class="form-label" for="{{ form.slug.id_for_label }}">
+            URL Slug <span style="color:var(--clr-gold);">*</span>
+          </label>
+          {{ form.slug }}
+          {% if form.slug.errors %}<span class="form-error">{{ form.slug.errors.0 }}</span>{% endif %}
+        </div>
+
+        {% if form.department %}
+          <!-- Department Parent Dropdown for Specialization -->
+          <div class="form-group form-group--full">
+            <label class="form-label" for="{{ form.department.id_for_label }}">Parent Department</label>
+            {{ form.department }}
+            {% if form.department.errors %}<span class="form-error">{{ form.department.errors.0 }}</span>{% endif %}
+          </div>
+        {% endif %}
+
+        <div class="form-group">
+          <label class="form-label" for="{{ form.order.id_for_label }}">Sort Order</label>
+          {{ form.order }}
+        </div>
+
+        <!-- Image / Icon -->
+        <div class="form-group">
+          <label class="form-label" for="{{ form.image.id_for_label }}">Badge / Icon Image</label>
+          {{ form.image }}
+        </div>
+
+        <!-- Description -->
+        <div class="form-group form-group--full">
+          <label class="form-label" for="{{ form.description.id_for_label }}">Description</label>
+          {{ form.description }}
+        </div>
+
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="form-actions">
+        <button type="submit" class="btn btn--gold">
+          {% if is_edit %}Save Changes{% else %}Create {{ type }}{% endif %} &nbsp;→
+        </button>
+        <a href="{% url 'dashboard:department_list' %}" class="btn btn--outline">Cancel</a>
+      </div>
+
+    </form>
+  </div>
+
+{% endblock %}
+

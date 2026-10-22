@@ -1,0 +1,111 @@
+{% extends "dashboard/base_dashboard.html" %}
+{% load static %}
+
+{% block topbar_actions %}
+  <a href="{% url 'dashboard:project_create' %}" class="btn btn--gold btn--sm">+ Add New Project</a>
+{% endblock %}
+
+{% block dash_content %}
+
+  <div class="dash-panel" data-animate>
+
+    <!-- Toolbar -->
+    <div class="dash-toolbar">
+      <form method="get" action="{% url 'dashboard:project_list' %}" class="dash-search-form">
+        <div class="dash-search-wrap">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+          <input
+            type="search"
+            name="q"
+            value="{{ search_query }}"
+            class="dash-search-input"
+            placeholder="Search projects by title, stack, or client..."
+          />
+        </div>
+        <select name="category" class="dash-select" onchange="this.form.submit()">
+          <option value="all" {% if category_filter == 'all' %}selected{% endif %}>All Categories</option>
+          {% for code, label in categories %}
+            <option value="{{ code }}" {% if category_filter == code %}selected{% endif %}>{{ label }}</option>
+          {% endfor %}
+        </select>
+        <button type="submit" class="btn btn--outline btn--sm">Search</button>
+        {% if search_query or category_filter != 'all' %}
+          <a href="{% url 'dashboard:project_list' %}" class="btn btn--outline btn--sm">Clear</a>
+        {% endif %}
+      </form>
+
+      <span class="dash-toolbar__count">Total: <strong>{{ total_count }}</strong></span>
+    </div>
+
+    <!-- Table -->
+    <div class="dash-table-wrap">
+      <table class="dash-table">
+        <thead>
+          <tr>
+            <th style="width:50px;">Media</th>
+            <th>Project Title</th>
+            <th>Category</th>
+            <th>Tech Stack</th>
+            <th>Featured</th>
+            <th>Status</th>
+            <th style="text-align:right;">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for proj in projects %}
+            <tr>
+              <td>
+                {% if proj.image %}
+                  <img src="{{ proj.image.url }}" alt="{{ proj.title }}" class="dash-thumb-img" />
+                {% else %}
+                  <div class="dash-thumb-placeholder" aria-hidden="true">{{ proj.category_icon }}</div>
+                {% endif %}
+              </td>
+              <td>
+                <strong class="dash-row-title">{{ proj.title }}</strong>
+                <span class="dash-row-sub">{{ proj.tagline }}</span>
+              </td>
+              <td><span class="badge badge--blue">{{ proj.get_category_display }}</span></td>
+              <td><span class="dash-row-sub">{{ proj.stack }}</span></td>
+              <td>
+                {% if proj.is_featured %}
+                  <span class="badge badge--gold">Featured</span>
+                {% else %}
+                  <span class="dash-row-sub">Standard</span>
+                {% endif %}
+              </td>
+              <td>
+                <a href="{% url 'dashboard:project_toggle_publish' proj.pk %}" class="status-toggle" title="Click to toggle publish status">
+                  {% if proj.is_published %}
+                    <span class="status-indicator status-indicator--green">Published</span>
+                  {% else %}
+                    <span class="status-indicator status-indicator--gold">Hidden</span>
+                  {% endif %}
+                </a>
+              </td>
+              <td>
+                <div class="dash-actions-cell" style="justify-content:flex-end;">
+                  <a href="{% url 'projects:projects' %}" class="action-btn" target="_blank" title="View live page">👁️</a>
+                  <a href="{% url 'dashboard:project_edit' proj.pk %}" class="action-btn" title="Edit project">✏️</a>
+                  <a href="{% url 'dashboard:project_delete' proj.pk %}" class="action-btn action-btn--danger" title="Delete project">🗑️</a>
+                </div>
+              </td>
+            </tr>
+          {% empty %}
+            <tr>
+              <td colspan="7" class="dash-empty-cell">
+                No projects found.
+                <div style="margin-top:10px;">
+                  <a href="{% url 'dashboard:project_create' %}" class="btn btn--gold btn--sm">+ Add New Project</a>
+                </div>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+
+{% endblock %}
+

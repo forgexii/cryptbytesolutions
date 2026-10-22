@@ -1,0 +1,102 @@
+{% extends "dashboard/base_dashboard.html" %}
+{% load static %}
+
+{% block topbar_actions %}
+  <a href="{% url 'dashboard:solution_create' %}" class="btn btn--gold btn--sm">+ Add New Solution</a>
+{% endblock %}
+
+{% block dash_content %}
+
+  <div class="dash-panel" data-animate>
+
+    <!-- Toolbar -->
+    <div class="dash-toolbar">
+      <form method="get" action="{% url 'dashboard:solution_list' %}" class="dash-search-form">
+        <div class="dash-search-wrap">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+          <input
+            type="search"
+            name="q"
+            value="{{ search_query }}"
+            class="dash-search-input"
+            placeholder="Search solutions by title, category, or stack..."
+          />
+        </div>
+        <select name="status" class="dash-select" onchange="this.form.submit()">
+          <option value="all" {% if status_filter == 'all' %}selected{% endif %}>All Statuses</option>
+          <option value="published" {% if status_filter == 'published' %}selected{% endif %}>Active Only</option>
+          <option value="draft" {% if status_filter == 'draft' %}selected{% endif %}>Hidden Only</option>
+        </select>
+        <button type="submit" class="btn btn--outline btn--sm">Search</button>
+        {% if search_query or status_filter != 'all' %}
+          <a href="{% url 'dashboard:solution_list' %}" class="btn btn--outline btn--sm">Clear</a>
+        {% endif %}
+      </form>
+
+      <span class="dash-toolbar__count">Total: <strong>{{ total_count }}</strong></span>
+    </div>
+
+    <!-- Table -->
+    <div class="dash-table-wrap">
+      <table class="dash-table">
+        <thead>
+          <tr>
+            <th style="width:50px;">Media</th>
+            <th>Title &amp; Subtitle</th>
+            <th>Category</th>
+            <th>Timeline</th>
+            <th>Status</th>
+            <th style="text-align:right;">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for sol in solutions %}
+            <tr>
+              <td>
+                {% if sol.image %}
+                  <img src="{{ sol.image.url }}" alt="{{ sol.title }}" class="dash-thumb-img" />
+                {% else %}
+                  <div class="dash-thumb-placeholder" aria-hidden="true">💡</div>
+                {% endif %}
+              </td>
+              <td>
+                <strong class="dash-row-title">{{ sol.title }}</strong>
+                <span class="dash-row-sub">{{ sol.tagline|truncatewords:12 }}</span>
+              </td>
+              <td><span class="badge badge--gold">{{ sol.category }}</span></td>
+              <td><span class="dash-row-sub">{{ sol.timeline }}</span></td>
+              <td>
+                <a href="{% url 'dashboard:solution_toggle_publish' sol.pk %}" class="status-toggle" title="Click to toggle publish status">
+                  {% if sol.is_published %}
+                    <span class="status-indicator status-indicator--green">Active</span>
+                  {% else %}
+                    <span class="status-indicator status-indicator--gold">Hidden</span>
+                  {% endif %}
+                </a>
+              </td>
+              <td>
+                <div class="dash-actions-cell" style="justify-content:flex-end;">
+                  <a href="{% url 'solutions:detail' sol.slug %}" class="action-btn" target="_blank" title="View live page">👁️</a>
+                  <a href="{% url 'dashboard:solution_edit' sol.pk %}" class="action-btn" title="Edit solution">✏️</a>
+                  <a href="{% url 'dashboard:solution_delete' sol.pk %}" class="action-btn action-btn--danger" title="Delete solution">🗑️</a>
+                </div>
+              </td>
+            </tr>
+          {% empty %}
+            <tr>
+              <td colspan="6" class="dash-empty-cell">
+                No solutions found.
+                <div style="margin-top:10px;">
+                  <a href="{% url 'dashboard:solution_create' %}" class="btn btn--gold btn--sm">+ Add New Solution</a>
+                </div>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+
+{% endblock %}
+

@@ -1,0 +1,225 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Cryptbyte Solutions{% endblock %}
+{% block meta_description %}Learn about Cryptbyte Solutions: our story, mission, vision, values, and the journey that shaped us into a leading technology company.{% endblock %}
+{% block og_title %}Cryptbyte Solutions{% endblock %}
+{% block og_description %}A forward-thinking tech company driven by innovation, quality, and impact.{% endblock %}
+{% block nav_about %}active{% endblock %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/about.css' %}" />
+{% endblock %}
+
+{% block content %}
+
+  <!-- PAGE HERO -->
+  <section class="page-hero" aria-label="About page header">
+    <div class="page-hero__inner">
+      <div class="page-hero__eyebrow" data-animate data-delay="0">
+        <span class="page-hero__eyebrow-dot" aria-hidden="true"></span>
+        <span class="page-hero__eyebrow-text">Who We Are</span>
+      </div>
+      <h1 class="page-hero__heading" data-animate data-delay="80">
+        Driven by <span>Innovation.</span><br />Defined by Impact.
+      </h1>
+      <p class="page-hero__sub" data-animate data-delay="160">
+        We are a forward-thinking technology company that builds intelligent digital solutions
+        to help businesses and individuals solve real problems, improve efficiency,
+        and achieve sustainable growth.
+      </p>
+    </div>
+  </section>
+
+  <!-- STORY SPLIT -->
+  <section class="section" aria-labelledby="story-heading">
+    <div class="section__inner">
+      <div class="about-story">
+
+        <div class="about-story__img-wrap" data-animate data-delay="0">
+          <img
+            src="{% static 'images/about_workspace.png' %}"
+            alt="Cryptbyte Solutions workspace at night"
+            class="about-story__img"
+            width="600" height="480"
+            loading="lazy"
+          />
+          <div class="about-story__img-overlay" aria-hidden="true"></div>
+        </div>
+
+        <div class="about-story__content" data-animate data-delay="120">
+          <div class="section__label">
+            <span class="section__label-line" aria-hidden="true"></span>
+            <span class="section__label-text">Our Story</span>
+            <span class="section__label-line" aria-hidden="true"></span>
+          </div>
+          <h2 id="story-heading" class="section__heading" style="text-align:left; margin-bottom:1rem;">
+            Building Technology That <span>Works for You</span>
+          </h2>
+          <p class="about-story__body">
+            Cryptbyte Solutions was founded with a singular purpose, to make powerful technology
+            accessible, reliable, and human-centred. From humble beginnings, individuals of like minds coming together to form a software
+            consultancy consisting of multidisciplinary technology, delivering
+            end-to-end digital transformation.
+          </p>
+          <p class="about-story__body">
+            Every project we undertake is guided by our commitment to engineering excellence,
+            transparent collaboration, and measurable results. We don't just build software;
+            we build trust, one solution at a time.
+          </p>
+          <a href="{% url 'contact:contact' %}" id="about-contact-cta" class="btn btn--gold" style="margin-top:0.5rem;">
+            Work With Us &nbsp;→
+          </a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <section class="section section--alt" aria-label="Key company metrics">
+    <div class="section__inner">
+      <div class="section__header" data-animate>
+        <div class="section__label">
+          <span class="section__label-line" aria-hidden="true"></span>
+          <span class="section__label-text">By The Numbers</span>
+          <span class="section__label-line" aria-hidden="true"></span>
+        </div>
+        <h2 class="section__heading">Results That <span>Speak</span></h2>
+        <p class="section__sub">Numbers that reflect our commitment to quality and client satisfaction.</p>
+      </div>
+      <div class="about-stats">
+        <div class="about-stat-card" data-animate data-delay="0">
+          <p class="about-stat-card__value" data-counter="{{ solutions_count }}" data-suffix="">{{ solutions_count }}</p>
+          <p class="about-stat-card__label">Digital Solutions</p>
+        </div>
+        <div class="about-stat-card" data-animate data-delay="80">
+          <p class="about-stat-card__value" data-counter="{{ projects_count }}" data-suffix="">{{ projects_count }}</p>
+          <p class="about-stat-card__label">Projects Completed</p>
+        </div>
+        <div class="about-stat-card" data-animate data-delay="160">
+          <p class="about-stat-card__value" data-counter="{{ team_count }}" data-suffix="">{{ team_count }}</p>
+          <p class="about-stat-card__label">Tech Specialists</p>
+        </div>
+        <div class="about-stat-card" data-animate data-delay="240">
+          <p class="about-stat-card__value" data-counter="{{ dept_count }}" data-suffix="">{{ dept_count }}</p>
+          <p class="about-stat-card__label">Core Departments</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- VALUES -->
+  <section class="section" aria-labelledby="values-heading">
+    <div class="section__inner">
+      <div class="section__header" data-animate>
+        <div class="section__label">
+          <span class="section__label-line" aria-hidden="true"></span>
+          <span class="section__label-text">Our Core Values</span>
+          <span class="section__label-line" aria-hidden="true"></span>
+        </div>
+        <h2 id="values-heading" class="section__heading">What We <span>Stand For</span></h2>
+        <p class="section__sub">The principles that guide every decision we make and every line of code we write.</p>
+      </div>
+      <div class="values-grid">
+        <div class="value-card" data-animate data-delay="0">
+          <div class="value-card__num" aria-hidden="true">01</div>
+          <h3 class="value-card__title">Innovation First</h3>
+          <p class="value-card__body">We continuously explore emerging technologies and creative approaches to stay ahead of the curve and deliver cutting-edge solutions.</p>
+        </div>
+        <div class="value-card" data-animate data-delay="80">
+          <div class="value-card__num" aria-hidden="true">02</div>
+          <h3 class="value-card__title">Uncompromising Integrity</h3>
+          <p class="value-card__body">Honesty and transparency are at the heart of every client relationship. We say what we mean and deliver what we promise.</p>
+        </div>
+        <div class="value-card" data-animate data-delay="160">
+          <div class="value-card__num" aria-hidden="true">03</div>
+          <h3 class="value-card__title">Engineering Excellence</h3>
+          <p class="value-card__body">We hold ourselves to the highest technical standards with clean code, robust architecture, and solutions built to last.</p>
+        </div>
+        <div class="value-card" data-animate data-delay="0">
+          <div class="value-card__num" aria-hidden="true">04</div>
+          <h3 class="value-card__title">Deep Collaboration</h3>
+          <p class="value-card__body">Our best work happens when we work as a true partner, embedded in your goals, challenges, and vision for the future.</p>
+        </div>
+        <div class="value-card" data-animate data-delay="80">
+          <div class="value-card__num" aria-hidden="true">05</div>
+          <h3 class="value-card__title">Customer Centricity</h3>
+          <p class="value-card__body">Every feature, every design decision, every deployment is shaped by one question: does this genuinely serve our client's needs?</p>
+        </div>
+        <div class="value-card" data-animate data-delay="160">
+          <div class="value-card__num" aria-hidden="true">06</div>
+          <h3 class="value-card__title">Sustainable Impact</h3>
+          <p class="value-card__body">We build solutions that create long-term value: scalable, maintainable, and aligned with sustainable business growth.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- JOURNEY TIMELINE -->
+  <section class="section section--alt" aria-labelledby="timeline-heading">
+    <div class="section__inner">
+      <div class="section__header" data-animate>
+        <div class="section__label">
+          <span class="section__label-line" aria-hidden="true"></span>
+          <span class="section__label-text">Our Journey</span>
+          <span class="section__label-line" aria-hidden="true"></span>
+        </div>
+        <h2 id="timeline-heading" class="section__heading">Milestones That <span>Shaped Us</span></h2>
+      </div>
+      <div class="timeline" role="list" data-animate>
+        <div class="timeline-item" role="listitem">
+          <div class="timeline-item__content">
+            <p class="timeline-item__year">2026</p>
+            <h3 class="timeline-item__title">Founded</h3>
+            <p class="timeline-item__body">Cryptbyte Solutions was established with a mission to democratise access to world-class technology.</p>
+          </div>
+          <div class="timeline-item__spacer"><div class="timeline-item__dot" aria-hidden="true"></div></div>
+          <div class="timeline-item__empty"></div>
+        </div>
+        <div class="timeline-item" role="listitem">
+          <div class="timeline-item__empty"></div>
+          <div class="timeline-item__spacer"><div class="timeline-item__dot" aria-hidden="true"></div></div>
+          <div class="timeline-item__content">
+            <p class="timeline-item__year">2027</p>
+            <h3 class="timeline-item__title">First Major Projects</h3>
+            <p class="timeline-item__body">Delivered our first suite of enterprise web applications and secured key long-term client partnerships.</p>
+          </div>
+        </div>
+        <!-- <div class="timeline-item" role="listitem">
+          <div class="timeline-item__content">
+            <p class="timeline-item__year">2028</p>
+            <h3 class="timeline-item__title">AI & Cloud Expansion</h3>
+            <p class="timeline-item__body">Expanded our capabilities to include machine learning services, cloud infrastructure management, and cybersecurity.</p>
+          </div>
+          <div class="timeline-item__spacer"><div class="timeline-item__dot" aria-hidden="true"></div></div>
+          <div class="timeline-item__empty"></div>
+        </div>
+        <div class="timeline-item" role="listitem">
+          <div class="timeline-item__empty"></div>
+          <div class="timeline-item__spacer"><div class="timeline-item__dot" aria-hidden="true"></div></div>
+          <div class="timeline-item__content">
+            <p class="timeline-item__year">2029 to Present</p>
+            <h3 class="timeline-item__title">Scaling Forward</h3>
+            <p class="timeline-item__body">Scaling our team, refining our processes, and expanding into new markets with cutting-edge digital solutions.</p>
+          </div>
+        </div> -->
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA BANNER -->
+  <section class="section" aria-label="Call to action">
+    <div class="section__inner">
+      <div class="cta-banner" data-animate>
+        <h2 class="cta-banner__heading">Ready to Build <span>Something Great?</span></h2>
+        <p class="cta-banner__sub">Let's talk about how Cryptbyte Solutions can help transform your ideas into reality.</p>
+        <div class="cta-banner__actions">
+          <a href="{% url 'contact:contact' %}" id="about-cta-contact" class="btn btn--gold">Start a Conversation &nbsp;→</a>
+          <a href="{% url 'services:services' %}" id="about-cta-services" class="btn btn--outline">View Our Services</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+{% endblock %}

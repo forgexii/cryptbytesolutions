@@ -1,0 +1,181 @@
+/* ==========================================================
+   CRYPTBYTE SOLUTIONS - Contact App Stylesheet
+   Unique styles for contact app (Layout, Cards, Socials, Form)
+   ========================================================== */
+
+/* ========================================================
+   CONTACT PAGE
+   ======================================================== */
+.contact-layout {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr;
+  gap: var(--space-2xl);
+  align-items: flex-start;
+}
+
+/* Contact Info */
+.contact-info {}
+
+.contact-info-card {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-md);
+  padding: var(--space-lg);
+  background: var(--clr-bg-card);
+  border: 1px solid var(--clr-border);
+  border-radius: var(--radius-lg);
+  margin-bottom: var(--space-md);
+  transition: all var(--transition-base);
+}
+
+.contact-info-card:hover {
+  border-color: rgba(240, 165, 0, 0.3);
+  transform: translateX(4px);
+}
+
+.contact-info-card__icon {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-md);
+  background: rgba(240, 165, 0, 0.08);
+  border: 1px solid var(--clr-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--clr-gold);
+  flex-shrink: 0;
+}
+
+.contact-info-card__label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--clr-text-muted);
+  margin-bottom: 4px;
+}
+
+.contact-info-card__value {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--clr-text-primary);
+}
+
+.contact-info-card__sub {
+  font-size: 0.78rem;
+  color: var(--clr-text-muted);
+  margin-top: 2px;
+}
+
+/* Social Links */
+.contact-socials {
+  display: flex;
+  gap: var(--space-sm);
+  margin-top: var(--space-lg);
+}
+
+.social-link {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-md);
+  background: var(--clr-bg-card);
+  border: 1px solid var(--clr-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--clr-text-muted);
+  transition: all var(--transition-base);
+  font-size: 1rem;
+}
+
+.social-link:hover {
+  border-color: var(--clr-gold);
+  color: var(--clr-gold);
+  background: rgba(240, 165, 0, 0.08);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-glow-gold);
+}
+
+/* Contact Form */
+.contact-form-card {
+  background: var(--clr-bg-card);
+  border: 1px solid var(--clr-border);
+  border-radius: var(--radius-xl);
+  padding: var(--space-2xl);
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-md);
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: var(--space-md);
+}
+
+.form-group--full { grid-column: 1 / -1; }
+
+.form-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--clr-text-secondary);
+  letter-spacing: 0.3px;
+}
+
+.form-input,
+.form-select,
+.form-textarea {
+  width: 100%;
+  background: var(--clr-bg-secondary);
+  border: 1px solid var(--clr-border);
+  border-radius: var(--radius-md);
+  padding: 0.75rem 1rem;
+  color: var(--clr-text-primary);
+  font-family: var(--font-primary);
+  font-size: 0.875rem;
+  transition: all var(--transition-fast);
+  outline: none;
+  appearance: none;
+}
+
+.form-input::placeholder,
+.form-textarea::placeholder { color: var(--clr-text-muted); }
+
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus {
+  border-color: var(--clr-gold);
+  background: var(--clr-bg-card);
+  box-shadow: 0 0 0 3px rgba(240, 165, 0, 0.1);
+}
+
+.form-textarea {
+  resize: vertical;
+  min-height: 130px;
+}
+
+.form-select {
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%239ab0cc' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  padding-right: 2.5rem;
+}
+
+.form-select option { background: var(--clr-bg-secondary); }
+
+/* ========================================================
+   CONTACT RESPONSIVE
+   ======================================================== */
+@media (max-width: 1024px) {
+  .contact-layout { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 640px) {
+  .form-row { grid-template-columns: 1fr; }
+}
+

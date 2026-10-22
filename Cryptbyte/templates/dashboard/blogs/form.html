@@ -1,0 +1,158 @@
+{% extends "dashboard/base_dashboard.html" %}
+{% load static %}
+
+{% block topbar_actions %}
+  <a href="{% url 'dashboard:blog_list' %}" class="btn btn--outline btn--sm">← Back to Articles</a>
+{% endblock %}
+
+{% block dash_content %}
+
+  <div class="dash-panel dash-panel--form" data-animate>
+    <div class="dash-panel__header">
+      <div>
+        <h2 class="dash-panel__title">{{ page_title }}</h2>
+        <p class="dash-panel__sub">Fill in the fields below to publish or update this article.</p>
+      </div>
+    </div>
+
+    <form method="post" enctype="multipart/form-data" class="dash-form" novalidate>
+      {% csrf_token %}
+
+      {% if form.errors %}
+        <div class="dash-alert dash-alert--error" role="alert">
+          <span class="dash-alert__dot" aria-hidden="true"></span>
+          <span>Please review the errors highlighted below and correct them.</span>
+        </div>
+      {% endif %}
+
+      <div class="form-grid">
+
+        <!-- Title -->
+        <div class="form-group form-group--full">
+          <label class="form-label" for="{{ form.title.id_for_label }}">
+            Article Title <span style="color:var(--clr-gold);">*</span>
+          </label>
+          {{ form.title }}
+          {% if form.title.errors %}<span class="form-error">{{ form.title.errors.0 }}</span>{% endif %}
+        </div>
+
+        <!-- Slug -->
+        <div class="form-group">
+          <label class="form-label" for="{{ form.slug.id_for_label }}">
+            URL Slug <span style="color:var(--clr-gold);">*</span>
+          </label>
+          {{ form.slug }}
+          <span class="form-hint">Unique identifier for the article URL.</span>
+          {% if form.slug.errors %}<span class="form-error">{{ form.slug.errors.0 }}</span>{% endif %}
+        </div>
+
+        <!-- Category Dropdown -->
+        <div class="form-group">
+          <label class="form-label" for="{{ form.category.id_for_label }}">Category Relation</label>
+          {{ form.category }}
+          {% if form.category.errors %}<span class="form-error">{{ form.category.errors.0 }}</span>{% endif %}
+        </div>
+
+        <!-- Category Name Fallback -->
+        <div class="form-group">
+          <label class="form-label" for="{{ form.category_name.id_for_label }}">Category Display Label</label>
+          {{ form.category_name }}
+          {% if form.category_name.errors %}<span class="form-error">{{ form.category_name.errors.0 }}</span>{% endif %}
+        </div>
+
+        <!-- Author Name -->
+        <div class="form-group">
+          <label class="form-label" for="{{ form.author.id_for_label }}">Author Name</label>
+          {{ form.author }}
+          {% if form.author.errors %}<span class="form-error">{{ form.author.errors.0 }}</span>{% endif %}
+        </div>
+
+        <!-- Author Role -->
+        <div class="form-group">
+          <label class="form-label" for="{{ form.author_role.id_for_label }}">Author Role / Title</label>
+          {{ form.author_role }}
+          {% if form.author_role.errors %}<span class="form-error">{{ form.author_role.errors.0 }}</span>{% endif %}
+        </div>
+
+        <!-- Read Time & Published Date -->
+        <div class="form-group">
+          <label class="form-label" for="{{ form.read_time.id_for_label }}">Estimated Read Time</label>
+          {{ form.read_time }}
+          {% if form.read_time.errors %}<span class="form-error">{{ form.read_time.errors.0 }}</span>{% endif %}
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="{{ form.published_date.id_for_label }}">Publication Date</label>
+          {{ form.published_date }}
+          {% if form.published_date.errors %}<span class="form-error">{{ form.published_date.errors.0 }}</span>{% endif %}
+        </div>
+
+        <!-- Tags -->
+        <div class="form-group form-group--full">
+          <label class="form-label" for="{{ form.tags.id_for_label }}">Tags</label>
+          {{ form.tags }}
+          <span class="form-hint">Separate multiple tags with commas (e.g. AI Architecture, Microservices, Python).</span>
+          {% if form.tags.errors %}<span class="form-error">{{ form.tags.errors.0 }}</span>{% endif %}
+        </div>
+
+        <!-- Image Upload -->
+        <div class="form-group form-group--full">
+          <label class="form-label" for="{{ form.image.id_for_label }}">Featured Article Image</label>
+          {% if post.image %}
+            <div class="current-image-preview">
+              <img src="{{ post.image.url }}" alt="Current image preview" class="dash-preview-img" />
+              <span class="form-hint">Current image attached. Upload a new file below to replace it.</span>
+            </div>
+          {% endif %}
+          {{ form.image }}
+          {% if form.image.errors %}<span class="form-error">{{ form.image.errors.0 }}</span>{% endif %}
+        </div>
+
+        <!-- Excerpt -->
+        <div class="form-group form-group--full">
+          <label class="form-label" for="{{ form.excerpt.id_for_label }}">
+            Short Excerpt <span style="color:var(--clr-gold);">*</span>
+          </label>
+          {{ form.excerpt }}
+          <span class="form-hint">Displays on cards, search engines, and social media preview snippets.</span>
+          {% if form.excerpt.errors %}<span class="form-error">{{ form.excerpt.errors.0 }}</span>{% endif %}
+        </div>
+
+        <!-- Content -->
+        <div class="form-group form-group--full">
+          <label class="form-label" for="{{ form.content.id_for_label }}">
+            Full Article Content <span style="color:var(--clr-gold);">*</span>
+          </label>
+          {{ form.content }}
+          <span class="form-hint">Supports HTML markup (e.g. &lt;h2&gt;, &lt;p&gt;, &lt;ul&gt;, &lt;code&gt;, &lt;blockquote&gt;).</span>
+          {% if form.content.errors %}<span class="form-error">{{ form.content.errors.0 }}</span>{% endif %}
+        </div>
+
+        <!-- Checkbox Options -->
+        <div class="form-group form-group--full form-group--inline">
+          <label class="form-checkbox-label">
+            {{ form.is_featured }}
+            <span>Mark as Featured Article (Hero Placement)</span>
+          </label>
+
+          <label class="form-checkbox-label" style="margin-left:2rem;">
+            {{ form.is_published }}
+            <span>Published (Visible publicly on site)</span>
+          </label>
+        </div>
+
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="form-actions">
+        <button type="submit" class="btn btn--gold">
+          {% if is_edit %}Save Changes{% else %}Publish Article{% endif %} &nbsp;→
+        </button>
+        <a href="{% url 'dashboard:blog_list' %}" class="btn btn--outline">Cancel</a>
+      </div>
+
+    </form>
+  </div>
+
+{% endblock %}
+

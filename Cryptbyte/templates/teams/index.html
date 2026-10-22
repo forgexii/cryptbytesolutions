@@ -1,0 +1,263 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Cryptbyte Solutions{% endblock %}
+{% block meta_description %}Meet the multidisciplinary engineers, architects, and researchers building intelligent digital systems at Cryptbyte Solutions.{% endblock %}
+{% block og_title %}Cryptbyte Solutions{% endblock %}
+{% block og_description %}The minds behind Cryptbyte: systems architects, ML researchers, and cybersecurity practitioners.{% endblock %}
+
+{% block nav_teams %}active{% endblock %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/teams.css' %}" />
+{% endblock %}
+
+{% block content %}
+
+  <!-- PAGE HERO -->
+  <section class="page-hero" aria-label="Team page header">
+    <div class="page-hero__inner">
+      <div class="page-hero__eyebrow" data-animate>
+        <span class="page-hero__eyebrow-dot" aria-hidden="true"></span>
+        <span class="page-hero__eyebrow-text">Our People</span>
+      </div>
+      <h1 class="page-hero__heading" data-animate data-delay="80">
+        The Minds Behind <span>Cryptbyte.</span>
+      </h1>
+      <p class="page-hero__sub" data-animate data-delay="160">
+        We are a collective of software engineers, AI researchers, cybersecurity architects,
+        and systems builders united by one obsession: engineering technology that works flawlessly.
+      </p>
+    </div>
+  </section>
+
+  <!-- TEAM SECTION -->
+  <section class="section" aria-labelledby="team-heading">
+    <div class="section__inner">
+
+      <!-- Section Header -->
+      <div class="section__header" data-animate>
+        <div class="section__label">
+          <span class="section__label-line" aria-hidden="true"></span>
+          <span class="section__label-text">World-Class Talent</span>
+          <span class="section__label-line" aria-hidden="true"></span>
+        </div>
+        <h2 id="team-heading" class="section__heading">{{ all_members_count }} Seasoned <span>Specialists</span></h2>
+        <p class="section__sub">Every system we deliver is shaped by {{ all_members_count }} technologists across {{ total_departments }} departments and {{ total_specializations }} technical specializations.</p>
+      </div>
+
+      <!-- Search & Specialization Filter Bar -->
+      <form method="get" action="{% url 'teams:teams' %}" class="team-search-form" data-animate data-delay="60">
+        <div class="team-search-input-wrap">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+          <input
+            type="search"
+            name="q"
+            value="{{ search_query }}"
+            class="team-search-input"
+            placeholder="Search by name, role, department, or specialization..."
+          />
+        </div>
+
+        <select name="specialization" class="team-filter-select">
+          <option value="all">All Specializations</option>
+          {% for spec in specializations %}
+            <option value="{{ spec.slug }}" {% if current_specialization == spec.slug %}selected{% endif %}>
+              {{ spec.name }}{% if spec.department %} ({{ spec.department.name }}){% endif %}
+            </option>
+          {% endfor %}
+        </select>
+
+        {% if current_department and current_department != 'all' %}
+          <input type="hidden" name="department" value="{{ current_department }}" />
+        {% endif %}
+
+        <button type="submit" class="btn btn--gold team-search-btn">Filter &nbsp;→</button>
+        {% if search_query or current_department != 'all' or current_specialization != 'all' %}
+          <a href="{% url 'teams:teams' %}" class="btn btn--outline team-search-clear">Clear Filters</a>
+        {% endif %}
+      </form>
+
+      <!-- Department Filter Pills -->
+      <div class="team-filters" role="tablist" aria-label="Filter team members by department" data-animate data-delay="80">
+        <a
+          href="{% url 'teams:teams' %}{% if search_query %}?q={{ search_query }}{% endif %}"
+          class="team-filter-btn {% if current_department == 'all' %}active{% endif %}"
+          role="tab"
+          aria-selected="{% if current_department == 'all' %}true{% else %}false{% endif %}"
+        >
+          All Departments ({{ all_members_count }})
+        </a>
+        {% for dept in departments %}
+          <a
+            href="{% url 'teams:teams' %}?department={{ dept.slug }}{% if search_query %}&q={{ search_query }}{% endif %}{% if current_specialization != 'all' %}&specialization={{ current_specialization }}{% endif %}"
+            class="team-filter-btn {% if current_department == dept.slug %}active{% endif %}"
+            role="tab"
+            aria-selected="{% if current_department == dept.slug %}true{% else %}false{% endif %}"
+          >
+            {{ dept.name }} ({{ dept.member_count }})
+          </a>
+        {% endfor %}
+      </div>
+
+      <!-- Result Counter -->
+      {% if search_query or current_department != 'all' or current_specialization != 'all' %}
+        <div class="team-search-feedback" data-animate>
+          Showing <strong>{{ total_results }}</strong> member{{ total_results|pluralize }} matching your criteria.
+        </div>
+      {% endif %}
+
+      <!-- MEMBERS GRID -->
+      <div class="team-grid">
+        {% for member in members %}
+          <article class="team-card" data-animate data-delay="100">
+            <div class="team-card__body">
+
+              <!-- Header with Avatar & Department Badges -->
+              <div class="team-card__header">
+                {% if member.image %}
+                  <div class="team-avatar team-avatar--photo" aria-hidden="true">
+                    <img src="{{ member.image.url }}" alt="{{ member.name }}" style="width:100%; height:100%; object-fit:cover; border-radius:inherit;" />
+                  </div>
+                {% else %}
+                  <div class="team-avatar" aria-hidden="true">
+                    {{ member.initials }}
+                  </div>
+                {% endif %}
+                <div class="team-card__badges">
+                  {% if member.is_leadership %}
+                    <span class="team-badge team-badge--leadership">Leadership</span>
+                  {% endif %}
+                  <span class="team-badge team-badge--dept">{{ member.display_department }}</span>
+                  {% for spec in member.specializations.all %}
+                    <span class="team-badge team-badge--spec">{{ spec.name }}</span>
+                  {% endfor %}
+                </div>
+              </div>
+
+              <!-- Name & Role -->
+              <h3 class="team-card__name">{{ member.name }}</h3>
+              <p class="team-card__role">{{ member.role }}</p>
+
+              <!-- Bio -->
+              <p class="team-card__bio">{{ member.bio }}</p>
+
+              <!-- Skills Tags -->
+              {% if member.skill_list %}
+                <div class="team-card__skills" aria-label="Key technical skills">
+                  {% for skill in member.skill_list %}
+                    <span class="team-skill-pill">{{ skill }}</span>
+                  {% endfor %}
+                </div>
+              {% elif member.skills %}
+                <div class="team-card__skills" aria-label="Key technical skills">
+                  {% for skill in member.skills %}
+                    <span class="team-skill-pill">{{ skill }}</span>
+                  {% endfor %}
+                </div>
+              {% endif %}
+
+              <!-- Footer with Social Links -->
+              <div class="team-card__footer">
+                <span style="font-size:0.72rem; color:var(--clr-text-muted); font-weight:600; text-transform:uppercase; letter-spacing:1px;">Connect:</span>
+                <div class="team-socials" aria-label="Connect with {{ member.name }}">
+                  {% if member.linkedin_url or member.linkedin %}
+                    <a href="{{ member.linkedin_url|default:member.linkedin }}" target="_blank" rel="noopener noreferrer" class="team-social-btn" title="LinkedIn" aria-label="{{ member.name }} on LinkedIn">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+                        <rect x="2" y="9" width="4" height="12"></rect>
+                        <circle cx="4" cy="4" r="2"></circle>
+                      </svg>
+                    </a>
+                  {% endif %}
+                  {% if member.github_url or member.github %}
+                    <a href="{{ member.github_url|default:member.github }}" target="_blank" rel="noopener noreferrer" class="team-social-btn" title="GitHub" aria-label="{{ member.name }} on GitHub">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+                      </svg>
+                    </a>
+                  {% endif %}
+                  {% if member.twitter_url or member.twitter %}
+                    <a href="{{ member.twitter_url|default:member.twitter }}" target="_blank" rel="noopener noreferrer" class="team-social-btn" title="X (Twitter)" aria-label="{{ member.name }} on X">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                      </svg>
+                    </a>
+                  {% endif %}
+                </div>
+              </div>
+
+            </div>
+          </article>
+        {% empty %}
+          <div style="grid-column:1/-1; text-align:center; padding:var(--space-3xl); background:var(--clr-bg-card); border:1px solid var(--clr-border); border-radius:var(--radius-xl);">
+            <p style="font-size:1.1rem; color:var(--clr-text-primary); margin-bottom:8px;">No team members found</p>
+            <p style="font-size:0.85rem; color:var(--clr-text-muted); margin-bottom:var(--space-lg);">Try adjusting your search query or department filters.</p>
+            <a href="{% url 'teams:teams' %}" class="btn btn--gold">View All Members</a>
+          </div>
+        {% endfor %}
+      </div>
+
+      <!-- ENGINEERING CULTURE -->
+      <div class="section__header" data-animate style="margin-top:var(--space-3xl);">
+        <div class="section__label">
+          <span class="section__label-line" aria-hidden="true"></span>
+          <span class="section__label-text">Our Philosophy</span>
+          <span class="section__label-line" aria-hidden="true"></span>
+        </div>
+        <h2 class="section__heading">How We <span>Build Together</span></h2>
+        <p class="section__sub">Our culture is designed to empower autonomy, relentless technical rigor, and deep client alignment.</p>
+      </div>
+
+      <div class="team-culture-grid" data-animate data-delay="100">
+        <div class="culture-card">
+          <div class="culture-card__icon" aria-hidden="true">⚙️</div>
+          <h3 class="culture-card__title">First-Principles Engineering</h3>
+          <p class="culture-card__body">We don’t copy-paste architectures. We decompose challenges to their root requirements and design solutions built for extreme longevity.</p>
+        </div>
+        <div class="culture-card">
+          <div class="culture-card__icon" aria-hidden="true">🤝</div>
+          <h3 class="culture-card__title">Radical Transparency</h3>
+          <p class="culture-card__body">No corporate bureaucracy. Engineers communicate directly with clients, share unvarnished telemetry, and own outcomes end-to-end.</p>
+        </div>
+        <div class="culture-card">
+          <div class="culture-card__icon" aria-hidden="true">🎯</div>
+          <h3 class="culture-card__title">Uncompromising Quality</h3>
+          <p class="culture-card__body">Every pull request undergoes peer review, strict automated test suites, and security scans before touching any staging cluster.</p>
+        </div>
+      </div>
+
+      <!-- CAREERS CALLOUT -->
+      <div class="team-careers-box" data-animate data-delay="150">
+        <div class="team-careers-box__inner">
+          <span class="team-badge team-badge--leadership" style="margin-bottom:1rem;">We're Hiring</span>
+          <h2 class="team-careers-box__heading">Want to Build the <span>Future With Us?</span></h2>
+          <p class="team-careers-box__sub">
+            We are always looking for curious minds, extraordinary engineers, and visionary thinkers
+            who refuse to settle for ordinary software.
+          </p>
+          <a href="{% url 'contact:contact' %}" class="btn btn--gold">
+            Explore Careers &amp; Get in Touch &nbsp;→
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- CTA BANNER -->
+  <section class="section section--alt" aria-label="Work with our team call to action">
+    <div class="section__inner">
+      <div class="cta-banner" data-animate>
+        <h2 class="cta-banner__heading">Have a Project for <span>Our Team?</span></h2>
+        <p class="cta-banner__sub">Let's discuss how our multidisciplinary engineers can help architect and scale your digital systems.</p>
+        <div class="cta-banner__actions">
+          <a href="{% url 'contact:contact' %}" class="btn btn--gold">Start a Conversation &nbsp;→</a>
+          <a href="{% url 'services:services' %}" class="btn btn--outline">View Our Services</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+{% endblock %}
+

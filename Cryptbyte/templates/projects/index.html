@@ -1,0 +1,160 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Cryptbyte Solutions{% endblock %}
+{% block meta_description %}Explore Cryptbyte Solutions' portfolio of completed projects: web apps, AI systems, cybersecurity tools, and cloud infrastructure delivered for real clients.{% endblock %}
+{% block og_title %}Cryptbyte Solutions{% endblock %}
+{% block og_description %}{{ total_db_count }} completed projects across software engineering, AI, cloud, and cybersecurity.{% endblock %}
+{% block nav_projects %}active{% endblock %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/projects.css' %}" />
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  // Project filter tabs
+  document.addEventListener('DOMContentLoaded', () => {
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    const projectCards = document.querySelectorAll('[data-category]');
+
+    filterBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        filterBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const cat = btn.dataset.filter;
+        projectCards.forEach(card => {
+          const match = cat === 'all' || card.dataset.category === cat;
+          card.style.opacity = match ? '1' : '0.25';
+          card.style.transform = match ? 'scale(1)' : 'scale(0.97)';
+          card.style.pointerEvents = match ? 'auto' : 'none';
+        });
+      });
+    });
+  });
+</script>
+{% endblock %}
+
+{% block content %}
+
+  <!-- PAGE HERO -->
+  <section class="page-hero" aria-label="Projects page header">
+    <div class="page-hero__inner">
+      <div class="page-hero__eyebrow" data-animate>
+        <span class="page-hero__eyebrow-dot" aria-hidden="true"></span>
+        <span class="page-hero__eyebrow-text">Our Portfolio</span>
+      </div>
+      <h1 class="page-hero__heading" data-animate data-delay="80">
+        Projects That <span>Prove</span> What We Say
+      </h1>
+      <p class="page-hero__sub" data-animate data-delay="160">
+        Real work for real clients. Explore our portfolio of completed projects spanning
+        software engineering, AI, cybersecurity, and cloud infrastructure.
+      </p>
+    </div>
+  </section>
+
+  <!-- FEATURED PROJECT -->
+  <section class="section" aria-labelledby="featured-heading">
+    <div class="section__inner">
+      <div class="section__header" data-animate>
+        <div class="section__label">
+          <span class="section__label-line" aria-hidden="true"></span>
+          <span class="section__label-text">Featured Work</span>
+          <span class="section__label-line" aria-hidden="true"></span>
+        </div>
+      </div>
+      {% if featured_project %}
+      <div class="project-featured" data-animate>
+        <div class="project-featured__media" aria-hidden="true">
+          {% if featured_project.image %}
+            <img src="{{ featured_project.image.url }}" alt="{{ featured_project.title }}" style="width:100%; height:100%; object-fit:cover; border-radius:var(--radius-lg);" />
+          {% else %}
+            <div class="project-featured__media-icon">{{ featured_project.category_icon }}</div>
+          {% endif %}
+        </div>
+        <div class="project-featured__content">
+          <span class="project-featured__badge">Featured Project</span>
+          <h2 id="featured-heading" class="project-featured__title">{{ featured_project.title }}</h2>
+          <p class="project-featured__desc">{{ featured_project.description }}</p>
+          <div class="project-card__stack" style="margin-bottom:1.5rem;">
+            {% for tech in featured_project.stack_list %}
+              <span class="stack-pill">{{ tech }}</span>
+            {% endfor %}
+          </div>
+          <a href="{% url 'contact:contact' %}" id="featured-enquire" class="btn btn--gold">Enquire About This &nbsp;→</a>
+        </div>
+      </div>
+      {% endif %}
+    </div>
+  </section>
+
+  <!-- PROJECT GRID -->
+  <section class="section section--alt" aria-labelledby="projects-grid-heading">
+    <div class="section__inner">
+      <div class="section__header" data-animate>
+        <div class="section__label">
+          <span class="section__label-line" aria-hidden="true"></span>
+          <span class="section__label-text">All Projects</span>
+          <span class="section__label-line" aria-hidden="true"></span>
+        </div>
+        <h2 id="projects-grid-heading" class="section__heading">{{ total_db_count }} Completed <span>Projects</span></h2>
+      </div>
+
+      <!-- Filter Tabs -->
+      <div class="projects-filter" role="tablist" aria-label="Filter projects by category" data-animate>
+        <button class="filter-btn active" data-filter="all" role="tab" aria-selected="true" id="filter-all">All ({{ total_db_count }})</button>
+        {% for cat in categories %}
+          {% if cat.slug != 'all' %}
+            <button class="filter-btn" data-filter="{{ cat.slug }}" role="tab" aria-selected="false" id="filter-{{ cat.slug }}">{{ cat.name }} ({{ cat.count }})</button>
+          {% endif %}
+        {% endfor %}
+      </div>
+
+      <div class="projects-grid">
+        {% for proj in all_projects %}
+          <article class="project-card" data-category="{{ proj.category }}" data-animate>
+            {% if proj.image %}
+              <div class="project-card__thumb" style="height:180px; overflow:hidden; position:relative;">
+                <img src="{{ proj.image.url }}" alt="{{ proj.title }}" style="width:100%; height:100%; object-fit:cover;" />
+                <div class="project-card__overlay">
+                  <span class="project-card__tag">{{ proj.get_category_display }}</span>
+                </div>
+              </div>
+            {% else %}
+              <div class="project-card__thumb-placeholder" aria-hidden="true">{{ proj.category_icon }}
+                <div class="project-card__overlay">
+                  <span class="project-card__tag">{{ proj.get_category_display }}</span>
+                </div>
+              </div>
+            {% endif %}
+            <div class="project-card__body">
+              <h3 class="project-card__title">{{ proj.title }}</h3>
+              <p class="project-card__desc">{{ proj.description }}</p>
+              <div class="project-card__stack">
+                {% for tag in proj.stack_list %}
+                  <span class="stack-pill">{{ tag }}</span>
+                {% endfor %}
+              </div>
+            </div>
+          </article>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="section" aria-label="Projects call to action">
+    <div class="section__inner">
+      <div class="cta-banner" data-animate>
+        <h2 class="cta-banner__heading">Have a Project in <span>Mind?</span></h2>
+        <p class="cta-banner__sub">Whether it's a greenfield build or modernising an existing system, we'd love to hear about it.</p>
+        <div class="cta-banner__actions">
+          <a href="{% url 'contact:contact' %}" id="projects-cta-contact" class="btn btn--gold">Discuss Your Project &nbsp;→</a>
+          <a href="{% url 'services:services' %}" id="projects-cta-services" class="btn btn--outline">Our Services</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+{% endblock %}

@@ -1,0 +1,285 @@
+{% extends "dashboard/base_dashboard.html" %}
+{% load static %}
+
+{% block topbar_actions %}
+  <div class="dash-quick-actions">
+    <a href="{% url 'dashboard:blog_create' %}" class="btn btn--gold btn--sm">+ New Blog</a>
+    <a href="{% url 'dashboard:solution_create' %}" class="btn btn--outline btn--sm">+ New Solution</a>
+    <a href="{% url 'dashboard:project_create' %}" class="btn btn--outline btn--sm">+ New Project</a>
+    <a href="{% url 'dashboard:team_create' %}" class="btn btn--outline btn--sm">+ Add Member</a>
+  </div>
+{% endblock %}
+
+{% block dash_content %}
+
+  <!-- KPI SUMMARY ROW -->
+  <div class="dash-stats-grid" data-animate>
+
+    <!-- Blogs Stat -->
+    <div class="dash-stat-card">
+      <div class="dash-stat-card__top">
+        <span class="dash-stat-card__label">Blog Articles</span>
+        <div class="dash-stat-card__icon" aria-hidden="true">📝</div>
+      </div>
+      <div class="dash-stat-card__val">{{ stats.blogs.total }}</div>
+      <div class="dash-stat-card__meta">
+        <span class="badge badge--green">{{ stats.blogs.published }} Published</span>
+        {% if stats.blogs.drafts %}
+          <span class="badge badge--gold">{{ stats.blogs.drafts }} Drafts</span>
+        {% endif %}
+      </div>
+      <a href="{% url 'dashboard:blog_list' %}" class="dash-stat-card__link">Manage Articles →</a>
+    </div>
+
+    <!-- Solutions Stat -->
+    <div class="dash-stat-card">
+      <div class="dash-stat-card__top">
+        <span class="dash-stat-card__label">Digital Solutions</span>
+        <div class="dash-stat-card__icon" aria-hidden="true">💡</div>
+      </div>
+      <div class="dash-stat-card__val">{{ stats.solutions.total }}</div>
+      <div class="dash-stat-card__meta">
+        <span class="badge badge--blue">{{ stats.solutions.published }} Active Solutions</span>
+      </div>
+      <a href="{% url 'dashboard:solution_list' %}" class="dash-stat-card__link">Manage Solutions →</a>
+    </div>
+
+    <!-- Projects Stat -->
+    <div class="dash-stat-card">
+      <div class="dash-stat-card__top">
+        <span class="dash-stat-card__label">Portfolio Projects</span>
+        <div class="dash-stat-card__icon" aria-hidden="true">🚀</div>
+      </div>
+      <div class="dash-stat-card__val">{{ stats.projects.total }}</div>
+      <div class="dash-stat-card__meta">
+        <span class="badge badge--gold">{{ stats.projects.featured }} Featured</span>
+      </div>
+      <a href="{% url 'dashboard:project_list' %}" class="dash-stat-card__link">Manage Projects →</a>
+    </div>
+
+    <!-- Teams Stat -->
+    <div class="dash-stat-card">
+      <div class="dash-stat-card__top">
+        <span class="dash-stat-card__label">Team Members</span>
+        <div class="dash-stat-card__icon" aria-hidden="true">👥</div>
+      </div>
+      <div class="dash-stat-card__val">{{ stats.teams.total }}</div>
+      <div class="dash-stat-card__meta">
+        <span class="badge badge--purple">{{ stats.teams.departments }} Departments</span>
+        <span class="badge badge--blue">{{ stats.teams.specializations }} Specs</span>
+      </div>
+      <a href="{% url 'dashboard:team_list' %}" class="dash-stat-card__link">Manage Team →</a>
+    </div>
+
+  </div>
+
+  <!-- TWO-COLUMN RECENT ACTIVITY SECTION -->
+  <div class="dash-split-grid" data-animate data-delay="80">
+
+    <!-- Recent Blog Articles -->
+    <div class="dash-panel">
+      <div class="dash-panel__header">
+        <div>
+          <h2 class="dash-panel__title">Recent Blog Articles</h2>
+          <p class="dash-panel__sub">Latest content published to the journal</p>
+        </div>
+        <a href="{% url 'dashboard:blog_create' %}" class="btn btn--gold btn--xs">+ Add Post</a>
+      </div>
+      <div class="dash-table-wrap">
+        <table class="dash-table">
+          <thead>
+            <tr>
+              <th>Title</th>
+              <th>Category</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for blog in recent_blogs %}
+              <tr>
+                <td>
+                  <strong class="dash-row-title">{{ blog.title }}</strong>
+                  <span class="dash-row-sub">By {{ blog.author }}</span>
+                </td>
+                <td><span class="badge badge--blue">{{ blog.display_category }}</span></td>
+                <td>
+                  {% if blog.is_published %}
+                    <span class="status-indicator status-indicator--green">Published</span>
+                  {% else %}
+                    <span class="status-indicator status-indicator--gold">Draft</span>
+                  {% endif %}
+                </td>
+                <td>
+                  <div class="dash-actions-cell">
+                    <a href="{% url 'dashboard:blog_edit' blog.pk %}" class="action-btn" title="Edit">✏️</a>
+                    <a href="{% url 'blogs:blog_detail' blog.slug %}" class="action-btn" target="_blank" title="View">👁️</a>
+                  </div>
+                </td>
+              </tr>
+            {% empty %}
+              <tr>
+                <td colspan="4" class="dash-empty-cell">No blog posts found. <a href="{% url 'dashboard:blog_create' %}">Create the first one</a>.</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Active Solutions -->
+    <div class="dash-panel">
+      <div class="dash-panel__header">
+        <div>
+          <h2 class="dash-panel__title">Digital Solutions</h2>
+          <p class="dash-panel__sub">Core capabilities offered to clients</p>
+        </div>
+        <a href="{% url 'dashboard:solution_create' %}" class="btn btn--gold btn--xs">+ Add Solution</a>
+      </div>
+      <div class="dash-table-wrap">
+        <table class="dash-table">
+          <thead>
+            <tr>
+              <th>Solution Title</th>
+              <th>Category</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for sol in recent_solutions %}
+              <tr>
+                <td>
+                  <strong class="dash-row-title">{{ sol.title }}</strong>
+                  <span class="dash-row-sub">{{ sol.timeline }}</span>
+                </td>
+                <td><span class="badge badge--gold">{{ sol.category }}</span></td>
+                <td>
+                  {% if sol.is_published %}
+                    <span class="status-indicator status-indicator--green">Active</span>
+                  {% else %}
+                    <span class="status-indicator status-indicator--gold">Hidden</span>
+                  {% endif %}
+                </td>
+                <td>
+                  <div class="dash-actions-cell">
+                    <a href="{% url 'dashboard:solution_edit' sol.pk %}" class="action-btn" title="Edit">✏️</a>
+                    <a href="{% url 'solutions:detail' sol.slug %}" class="action-btn" target="_blank" title="View">👁️</a>
+                  </div>
+                </td>
+              </tr>
+            {% empty %}
+              <tr>
+                <td colspan="4" class="dash-empty-cell">No solutions found.</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Recent Projects -->
+    <div class="dash-panel">
+      <div class="dash-panel__header">
+        <div>
+          <h2 class="dash-panel__title">Portfolio Projects</h2>
+          <p class="dash-panel__sub">Case studies and client deliverables</p>
+        </div>
+        <a href="{% url 'dashboard:project_create' %}" class="btn btn--gold btn--xs">+ Add Project</a>
+      </div>
+      <div class="dash-table-wrap">
+        <table class="dash-table">
+          <thead>
+            <tr>
+              <th>Project</th>
+              <th>Category</th>
+              <th>Featured</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for proj in recent_projects %}
+              <tr>
+                <td>
+                  <strong class="dash-row-title">{{ proj.title }}</strong>
+                  <span class="dash-row-sub">{{ proj.stack }}</span>
+                </td>
+                <td><span class="badge badge--blue">{{ proj.get_category_display }}</span></td>
+                <td>
+                  {% if proj.is_featured %}
+                    <span class="badge badge--gold">Featured</span>
+                  {% else %}
+                    <span class="dash-row-sub">Standard</span>
+                  {% endif %}
+                </td>
+                <td>
+                  <div class="dash-actions-cell">
+                    <a href="{% url 'dashboard:project_edit' proj.pk %}" class="action-btn" title="Edit">✏️</a>
+                    <a href="{% url 'projects:projects' %}" class="action-btn" target="_blank" title="View">👁️</a>
+                  </div>
+                </td>
+              </tr>
+            {% empty %}
+              <tr>
+                <td colspan="4" class="dash-empty-cell">No projects found.</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Team Members & Departments -->
+    <div class="dash-panel">
+      <div class="dash-panel__header">
+        <div>
+          <h2 class="dash-panel__title">Team Directory</h2>
+          <p class="dash-panel__sub">Specialists and department leads</p>
+        </div>
+        <a href="{% url 'dashboard:team_create' %}" class="btn btn--gold btn--xs">+ Add Member</a>
+      </div>
+      <div class="dash-table-wrap">
+        <table class="dash-table">
+          <thead>
+            <tr>
+              <th>Member</th>
+              <th>Department</th>
+              <th>Leadership</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for member in recent_teams %}
+              <tr>
+                <td>
+                  <strong class="dash-row-title">{{ member.name }}</strong>
+                  <span class="dash-row-sub">{{ member.role }}</span>
+                </td>
+                <td><span class="badge badge--purple">{{ member.display_department }}</span></td>
+                <td>
+                  {% if member.is_leadership %}
+                    <span class="badge badge--gold">Leadership</span>
+                  {% else %}
+                    <span class="dash-row-sub">Specialist</span>
+                  {% endif %}
+                </td>
+                <td>
+                  <div class="dash-actions-cell">
+                    <a href="{% url 'dashboard:team_edit' member.pk %}" class="action-btn" title="Edit">✏️</a>
+                    <a href="{% url 'teams:teams' %}" class="action-btn" target="_blank" title="View">👁️</a>
+                  </div>
+                </td>
+              </tr>
+            {% empty %}
+              <tr>
+                <td colspan="4" class="dash-empty-cell">No team members found.</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+{% endblock %}

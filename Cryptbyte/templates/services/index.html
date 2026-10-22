@@ -1,0 +1,257 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Cryptbyte Solutions{% endblock %}
+{% block meta_description %}Explore Cryptbyte Solutions' full range of technology services: software engineering, AI systems, cloud infrastructure, cybersecurity, and custom digital solutions.{% endblock %}
+{% block og_title %}Cryptbyte Solutions{% endblock %}
+{% block og_description %}From scalable web applications to AI-powered automation, we engineer solutions that matter.{% endblock %}
+{% block nav_services %}active{% endblock %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/services.css' %}" />
+{% endblock %}
+
+{% block content %}
+
+  <!-- PAGE HERO -->
+  <section class="page-hero" aria-label="Services page header">
+    <div class="page-hero__inner">
+      <div class="page-hero__eyebrow" data-animate>
+        <span class="page-hero__eyebrow-dot" aria-hidden="true"></span>
+        <span class="page-hero__eyebrow-text">What We Do</span>
+      </div>
+      <h1 class="page-hero__heading" data-animate data-delay="80">
+        Services Built to <span>Scale.</span><br />Solutions Built to <span>Last.</span>
+      </h1>
+      <p class="page-hero__sub" data-animate data-delay="160">
+        From concept to deployment, we provide end-to-end technology services tailored
+        to your business needs: no fluff, just precision engineering.
+      </p>
+    </div>
+  </section>
+
+  <!-- HERO VISUAL SPLIT -->
+  <section class="section" aria-label="Services overview visual">
+    <div class="section__inner">
+      <div class="solutions-hero-split">
+        <div data-animate data-delay="0">
+          <div class="section__label" style="justify-content:flex-start;">
+            <span class="section__label-line" aria-hidden="true"></span>
+            <span class="section__label-text">Our Expertise</span>
+          </div>
+          <h2 class="section__heading" style="text-align:left; margin-bottom:1rem;">
+            Six Pillars of <span>Technology Excellence</span>
+          </h2>
+          <p class="section__sub" style="text-align:left; margin-bottom:2rem;">
+            Every service we offer is underpinned by deep technical expertise, industry-proven
+            methodologies, and a relentless commitment to quality.
+          </p>
+          <div class="tech-stack">
+            <span class="tech-badge">Python</span>
+            <span class="tech-badge">Django</span>
+            <span class="tech-badge">React</span>
+            <span class="tech-badge">Node.js</span>
+            <span class="tech-badge">PostgreSQL</span>
+            <span class="tech-badge">AWS</span>
+            <span class="tech-badge">Docker</span>
+            <span class="tech-badge">TensorFlow</span>
+            <span class="tech-badge">Kubernetes</span>
+            <span class="tech-badge">Linux</span>
+            <span class="tech-badge">Git</span>
+            <span class="tech-badge">CI/CD</span>
+            <span class="tech-badge">Cybersecurity</span>
+            <span class="tech-badge">Rust</span>
+            <span class="tech-badge">So much more!</span>
+          </div>
+        </div>
+        <div data-animate data-delay="150">
+          <img
+            src="{% static 'images/services_visual.png' %}"
+            alt="Holographic technology interface representing Cryptbyte's service capabilities"
+            style="width:100%; border-radius:var(--radius-xl); border:1px solid var(--clr-border); filter:drop-shadow(0 0 40px rgba(30,144,255,0.3));"
+            width="580" height="440"
+            loading="lazy"
+          />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SERVICES DETAIL GRID -->
+  <section class="section section--alt" aria-labelledby="services-heading">
+    <div class="section__inner">
+      <div class="section__header" data-animate>
+        <div class="section__label">
+          <span class="section__label-line" aria-hidden="true"></span>
+          <span class="section__label-text">Core Services</span>
+          <span class="section__label-line" aria-hidden="true"></span>
+        </div>
+        <h2 id="services-heading" class="section__heading">Everything You Need to <span>Build &amp; Grow</span></h2>
+        <p class="section__sub">Comprehensive technology services designed to tackle your most complex challenges.</p>
+      </div>
+      <div class="services-grid">
+
+        <!-- Software Engineering -->
+        <article class="service-detail-card" data-animate data-delay="0">
+          <div class="service-detail-card__icon" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+          </div>
+          <div>
+            <h2 class="service-detail-card__title">Software Engineering</h2>
+            <p class="service-detail-card__desc">We build robust, scalable web applications, backend systems, RESTful APIs, and business software tailored to your workflows.</p>
+            <ul class="service-detail-card__features" aria-label="Software Engineering features">
+              <li class="service-detail-card__feature">Full-stack web application development</li>
+              <li class="service-detail-card__feature">RESTful API design &amp; integration</li>
+              <li class="service-detail-card__feature">Database architecture &amp; optimisation</li>
+              <li class="service-detail-card__feature">Code reviews &amp; technical audits</li>
+              <li class="service-detail-card__feature">Legacy system modernisation</li>
+            </ul>
+          </div>
+        </article>
+
+        <!-- AI & Intelligent Systems -->
+        <article class="service-detail-card" data-animate data-delay="80">
+          <div class="service-detail-card__icon" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+          </div>
+          <div>
+            <h2 class="service-detail-card__title">AI &amp; Intelligent Systems</h2>
+            <p class="service-detail-card__desc">Leverage the power of machine learning and AI to automate processes, uncover insights, and build intelligent applications.</p>
+            <ul class="service-detail-card__features" aria-label="AI features">
+              <li class="service-detail-card__feature">Custom ML model development</li>
+              <li class="service-detail-card__feature">Natural language processing (NLP)</li>
+              <li class="service-detail-card__feature">Intelligent process automation</li>
+              <li class="service-detail-card__feature">Predictive analytics &amp; data pipelines</li>
+              <li class="service-detail-card__feature">AI chatbots &amp; virtual assistants</li>
+            </ul>
+          </div>
+        </article>
+
+        <!-- Cloud & Infrastructure -->
+        <article class="service-detail-card" data-animate data-delay="0">
+          <div class="service-detail-card__icon" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/></svg>
+          </div>
+          <div>
+            <h2 class="service-detail-card__title">Cloud &amp; Infrastructure</h2>
+            <p class="service-detail-card__desc">We design, deploy, and manage scalable cloud infrastructure ensuring your applications are always fast, reliable, and secure.</p>
+            <ul class="service-detail-card__features" aria-label="Cloud features">
+              <li class="service-detail-card__feature">AWS, GCP &amp; Azure deployment</li>
+              <li class="service-detail-card__feature">CI/CD pipeline setup &amp; automation</li>
+              <li class="service-detail-card__feature">Docker &amp; Kubernetes orchestration</li>
+              <li class="service-detail-card__feature">Server monitoring &amp; uptime management</li>
+              <li class="service-detail-card__feature">Cloud cost optimisation</li>
+            </ul>
+          </div>
+        </article>
+
+        <!-- Cybersecurity -->
+        <article class="service-detail-card" data-animate data-delay="80">
+          <div class="service-detail-card__icon" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><circle cx="12" cy="11" r="2"/></svg>
+          </div>
+          <div>
+            <h2 class="service-detail-card__title">Cybersecurity</h2>
+            <p class="service-detail-card__desc">Protect your digital assets with our comprehensive security assessments, penetration testing, and intelligent threat detection services.</p>
+            <ul class="service-detail-card__features" aria-label="Cybersecurity features">
+              <li class="service-detail-card__feature">Penetration testing &amp; vulnerability assessments</li>
+              <li class="service-detail-card__feature">Network security architecture</li>
+              <li class="service-detail-card__feature">Security incident response planning</li>
+              <li class="service-detail-card__feature">Secure code review &amp; OWASP compliance</li>
+              <li class="service-detail-card__feature">Threat monitoring &amp; SIEM setup</li>
+            </ul>
+          </div>
+        </article>
+
+        <!-- Digital Solutions -->
+        <article class="service-detail-card" data-animate data-delay="0">
+          <div class="service-detail-card__icon" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+          </div>
+          <div>
+            <h2 class="service-detail-card__title">Digital Solutions</h2>
+            <p class="service-detail-card__desc">Bespoke digital products engineered from the ground up, from e-commerce platforms to internal business tools and SaaS products.</p>
+            <ul class="service-detail-card__features" aria-label="Digital Solutions features">
+              <li class="service-detail-card__feature">Custom SaaS product development</li>
+              <li class="service-detail-card__feature">E-commerce &amp; payment integrations</li>
+              <li class="service-detail-card__feature">Internal business dashboards &amp; tools</li>
+              <li class="service-detail-card__feature">UI/UX design &amp; prototyping</li>
+              <li class="service-detail-card__feature">Third-party API integrations</li>
+            </ul>
+          </div>
+        </article>
+
+        <!-- Consulting & Strategy -->
+        <article class="service-detail-card" data-animate data-delay="80">
+          <div class="service-detail-card__icon" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
+          <div>
+            <h2 class="service-detail-card__title">Consulting &amp; Strategy</h2>
+            <p class="service-detail-card__desc">Expert technology consulting to help you make smarter decisions, evaluate your current systems, and plan a roadmap for growth.</p>
+            <ul class="service-detail-card__features" aria-label="Consulting features">
+              <li class="service-detail-card__feature">Technology stack evaluation</li>
+              <li class="service-detail-card__feature">Digital transformation roadmapping</li>
+              <li class="service-detail-card__feature">Architecture &amp; system design consulting</li>
+              <li class="service-detail-card__feature">CTO-as-a-service &amp; technical leadership</li>
+              <li class="service-detail-card__feature">Agile &amp; DevOps coaching</li>
+            </ul>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW WE WORK -->
+  <section class="section" aria-labelledby="process-heading">
+    <div class="section__inner">
+      <div class="section__header" data-animate>
+        <div class="section__label">
+          <span class="section__label-line" aria-hidden="true"></span>
+          <span class="section__label-text">Our Process</span>
+          <span class="section__label-line" aria-hidden="true"></span>
+        </div>
+        <h2 id="process-heading" class="section__heading">How We <span>Work</span></h2>
+        <p class="section__sub">A structured, transparent process that keeps you informed at every step.</p>
+      </div>
+      <div class="process-steps">
+        <div class="process-step" data-animate data-delay="0">
+          <div class="process-step__num" aria-label="Step 1">01</div>
+          <h3 class="process-step__title">Discovery</h3>
+          <p class="process-step__body">We dive deep into your requirements, goals, and existing systems to map out the ideal solution.</p>
+        </div>
+        <div class="process-step" data-animate data-delay="80">
+          <div class="process-step__num" aria-label="Step 2">02</div>
+          <h3 class="process-step__title">Design &amp; Plan</h3>
+          <p class="process-step__body">We architect the solution with technical precision, then present a clear roadmap before any code is written.</p>
+        </div>
+        <div class="process-step" data-animate data-delay="160">
+          <div class="process-step__num" aria-label="Step 3">03</div>
+          <h3 class="process-step__title">Build &amp; Iterate</h3>
+          <p class="process-step__body">We build in sprints, delivering working software early and incorporating your feedback continuously.</p>
+        </div>
+        <div class="process-step" data-animate data-delay="240">
+          <div class="process-step__num" aria-label="Step 4">04</div>
+          <h3 class="process-step__title">Launch &amp; Support</h3>
+          <p class="process-step__body">We deploy securely, monitor performance, and provide ongoing support to keep your systems running smoothly.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="section section--alt" aria-label="Services call to action">
+    <div class="section__inner">
+      <div class="cta-banner" data-animate>
+        <h2 class="cta-banner__heading">Not Sure Which Service You Need?</h2>
+        <p class="cta-banner__sub">Tell us about your project and we'll recommend the right approach with no obligation and no pressure.</p>
+        <div class="cta-banner__actions">
+          <a href="{% url 'contact:contact' %}" id="services-cta-contact" class="btn btn--gold">Get a Free Consultation &nbsp;→</a>
+          <a href="{% url 'projects:projects' %}" id="services-cta-projects" class="btn btn--outline">See Our Work</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+{% endblock %}

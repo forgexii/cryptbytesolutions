@@ -1,0 +1,17 @@
+# Cryptbyte Solutions - Project Dependencies
+
+# Core Web Framework
+Django>=5.1.0,<6.2.0
+asgiref>=3.8.1
+sqlparse>=0.5.0
+
+# Image Processing (Required for ImageField in Teams, Blogs, Projects, Solutions)
+Pillow>=10.2.0
+
+# Production WSGI Server & Static Files
+gunicorn>=22.0.0
+whitenoise>=6.6.0
+
+# Environment Variables Management
+python-dotenv>=1.0.1
+

@@ -1,0 +1,110 @@
+{% extends "dashboard/base_dashboard.html" %}
+{% load static %}
+
+{% block topbar_actions %}
+  <a href="{% url 'dashboard:blog_create' %}" class="btn btn--gold btn--sm">+ Publish New Article</a>
+{% endblock %}
+
+{% block dash_content %}
+
+  <div class="dash-panel" data-animate>
+
+    <!-- Filters & Search Toolbar -->
+    <div class="dash-toolbar">
+      <form method="get" action="{% url 'dashboard:blog_list' %}" class="dash-search-form">
+        <div class="dash-search-wrap">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+          <input
+            type="search"
+            name="q"
+            value="{{ search_query }}"
+            class="dash-search-input"
+            placeholder="Search articles by title, author, tag, or category..."
+          />
+        </div>
+        <select name="status" class="dash-select" onchange="this.form.submit()">
+          <option value="all" {% if status_filter == 'all' %}selected{% endif %}>All Statuses</option>
+          <option value="published" {% if status_filter == 'published' %}selected{% endif %}>Published Only</option>
+          <option value="draft" {% if status_filter == 'draft' %}selected{% endif %}>Drafts Only</option>
+        </select>
+        <button type="submit" class="btn btn--outline btn--sm">Search</button>
+        {% if search_query or status_filter != 'all' %}
+          <a href="{% url 'dashboard:blog_list' %}" class="btn btn--outline btn--sm">Clear</a>
+        {% endif %}
+      </form>
+
+      <span class="dash-toolbar__count">Total: <strong>{{ total_count }}</strong></span>
+    </div>
+
+    <!-- Table -->
+    <div class="dash-table-wrap">
+      <table class="dash-table">
+        <thead>
+          <tr>
+            <th style="width:50px;">Media</th>
+            <th>Title &amp; Excerpt</th>
+            <th>Category</th>
+            <th>Author</th>
+            <th>Status</th>
+            <th>Date</th>
+            <th style="text-align:right;">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for post in posts %}
+            <tr>
+              <td>
+                {% if post.image %}
+                  <img src="{{ post.image.url }}" alt="{{ post.title }}" class="dash-thumb-img" />
+                {% else %}
+                  <div class="dash-thumb-placeholder" aria-hidden="true">📝</div>
+                {% endif %}
+              </td>
+              <td>
+                <strong class="dash-row-title">{{ post.title }}</strong>
+                <span class="dash-row-sub">{{ post.excerpt|truncatewords:14 }}</span>
+              </td>
+              <td>
+                <span class="badge badge--blue">{{ post.display_category }}</span>
+              </td>
+              <td>
+                <span class="dash-row-sub">{{ post.author }}</span>
+              </td>
+              <td>
+                <a href="{% url 'dashboard:blog_toggle_publish' post.pk %}" class="status-toggle" title="Click to toggle publish status">
+                  {% if post.is_published %}
+                    <span class="status-indicator status-indicator--green">Published</span>
+                  {% else %}
+                    <span class="status-indicator status-indicator--gold">Draft</span>
+                  {% endif %}
+                </a>
+              </td>
+              <td>
+                <span class="dash-row-sub">{{ post.published_date }}</span>
+              </td>
+              <td>
+                <div class="dash-actions-cell" style="justify-content:flex-end;">
+                  <a href="{% url 'blogs:blog_detail' post.slug %}" class="action-btn" target="_blank" title="View live page">👁️</a>
+                  <a href="{% url 'dashboard:blog_edit' post.pk %}" class="action-btn" title="Edit article">✏️</a>
+                  <a href="{% url 'dashboard:blog_delete' post.pk %}" class="action-btn action-btn--danger" title="Delete article">🗑️</a>
+                </div>
+              </td>
+            </tr>
+          {% empty %}
+            <tr>
+              <td colspan="7" class="dash-empty-cell">
+                No blog articles found matching your criteria.
+                <div style="margin-top:10px;">
+                  <a href="{% url 'dashboard:blog_create' %}" class="btn btn--gold btn--sm">+ Publish New Article</a>
+                </div>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+
+{% endblock %}
+

@@ -1,0 +1,112 @@
+{% extends "dashboard/base_dashboard.html" %}
+{% load static %}
+
+{% block topbar_actions %}
+  <a href="{% url 'dashboard:department_create' %}" class="btn btn--gold btn--sm">+ New Department</a>
+  <a href="{% url 'dashboard:specialization_create' %}" class="btn btn--outline btn--sm">+ New Specialization</a>
+{% endblock %}
+
+{% block dash_content %}
+
+  <div class="dash-split-grid" data-animate>
+
+    <!-- Departments Panel -->
+    <div class="dash-panel">
+      <div class="dash-panel__header">
+        <div>
+          <h2 class="dash-panel__title">Departments</h2>
+          <p class="dash-panel__sub">Organizational units across Cryptbyte</p>
+        </div>
+        <a href="{% url 'dashboard:department_create' %}" class="btn btn--gold btn--xs">+ Add</a>
+      </div>
+
+      <div class="dash-table-wrap">
+        <table class="dash-table">
+          <thead>
+            <tr>
+              <th>Department</th>
+              <th>Slug</th>
+              <th>Members</th>
+              <th style="text-align:right;">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for dept in departments %}
+              <tr>
+                <td>
+                  <strong class="dash-row-title">{{ dept.name }}</strong>
+                  <span class="dash-row-sub">{{ dept.description|truncatewords:8 }}</span>
+                </td>
+                <td><code class="dash-code">{{ dept.slug }}</code></td>
+                <td><span class="badge badge--purple">{{ dept.member_count }}</span></td>
+                <td>
+                  <div class="dash-actions-cell" style="justify-content:flex-end;">
+                    <a href="{% url 'dashboard:department_edit' dept.pk %}" class="action-btn" title="Edit department">✏️</a>
+                    <a href="{% url 'dashboard:department_delete' dept.pk %}" class="action-btn action-btn--danger" title="Delete department">🗑️</a>
+                  </div>
+                </td>
+              </tr>
+            {% empty %}
+              <tr>
+                <td colspan="4" class="dash-empty-cell">No departments configured yet.</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Specializations Panel -->
+    <div class="dash-panel">
+      <div class="dash-panel__header">
+        <div>
+          <h2 class="dash-panel__title">Technical Specializations</h2>
+          <p class="dash-panel__sub">Domain competencies linked to departments</p>
+        </div>
+        <a href="{% url 'dashboard:specialization_create' %}" class="btn btn--gold btn--xs">+ Add</a>
+      </div>
+
+      <div class="dash-table-wrap">
+        <table class="dash-table">
+          <thead>
+            <tr>
+              <th>Specialization</th>
+              <th>Department</th>
+              <th style="text-align:right;">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for spec in specializations %}
+              <tr>
+                <td>
+                  <strong class="dash-row-title">{{ spec.name }}</strong>
+                  <span class="dash-row-sub">{{ spec.description|truncatewords:8 }}</span>
+                </td>
+                <td>
+                  {% if spec.department %}
+                    <span class="badge badge--blue">{{ spec.department.name }}</span>
+                  {% else %}
+                    <span class="dash-row-sub">General</span>
+                  {% endif %}
+                </td>
+                <td>
+                  <div class="dash-actions-cell" style="justify-content:flex-end;">
+                    <a href="{% url 'dashboard:specialization_edit' spec.pk %}" class="action-btn" title="Edit specialization">✏️</a>
+                    <a href="{% url 'dashboard:specialization_delete' spec.pk %}" class="action-btn action-btn--danger" title="Delete specialization">🗑️</a>
+                  </div>
+                </td>
+              </tr>
+            {% empty %}
+              <tr>
+                <td colspan="3" class="dash-empty-cell">No specializations configured yet.</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+{% endblock %}
+

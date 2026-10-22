@@ -1,0 +1,34 @@
+# Environment & Private Keys
+.env
+.env.local
+*.key
+*.pem
+
+# Python & Django caches
+__pycache__/
+*.py[cod]
+*$py.class
+*.sqlite3
+*.sqlite3.backup
+
+# Media uploads (user uploaded images)
+media/
+
+# Static collection for production
+staticfiles/
+
+# Virtual environment
+venv/
+env/
+.venv/
+
+# IDE & Editor settings
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+

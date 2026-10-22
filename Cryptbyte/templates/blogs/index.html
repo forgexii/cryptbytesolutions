@@ -1,0 +1,244 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Cryptbyte Solutions{% endblock %}
+{% block meta_description %}In-depth articles, architectural breakdowns, and strategic perspectives on AI, cloud engineering, cybersecurity, and modern software from the Cryptbyte Solutions team.{% endblock %}
+{% block og_title %}Cryptbyte Solutions{% endblock %}
+{% block og_description %}Deep-dives into AI microservices, Zero Trust security, database optimization, and high-performance software engineering.{% endblock %}
+
+{% block nav_blogs %}active{% endblock %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/blogs.css' %}" />
+{% endblock %}
+
+{% block content %}
+
+  <!-- PAGE HERO -->
+  <section class="page-hero" aria-label="Blog page header">
+    <div class="page-hero__inner">
+      <div class="page-hero__eyebrow" data-animate>
+        <span class="page-hero__eyebrow-dot" aria-hidden="true"></span>
+        <span class="page-hero__eyebrow-text">Insights &amp; Engineering</span>
+      </div>
+      <h1 class="page-hero__heading" data-animate data-delay="80">
+        Engineering <span>Perspectives.</span><br />Future-Ready Ideas.
+      </h1>
+      <p class="page-hero__sub" data-animate data-delay="160">
+        In-depth technical breakdowns, architectural blueprints, and industry insights
+        crafted by our engineers, architects, and technology leaders.
+      </p>
+    </div>
+  </section>
+
+  <!-- BLOG MAIN CONTENT -->
+  <section class="section" aria-labelledby="blog-main-heading">
+    <div class="section__inner">
+
+      <!-- Section Header -->
+      <div class="section__header" data-animate>
+        <div class="section__label">
+          <span class="section__label-line" aria-hidden="true"></span>
+          <span class="section__label-text">The Cryptbyte Journal</span>
+          <span class="section__label-line" aria-hidden="true"></span>
+        </div>
+        <h2 id="blog-main-heading" class="section__heading">{{ total_db_articles }} Published <span>Articles</span></h2>
+        <p class="section__sub">Explore our {{ total_db_articles }} perspectives across {{ total_categories_count }} categories on artificial intelligence, cybersecurity, system design, and the evolving tech frontier.</p>
+      </div>
+
+      <!-- Search & Filters -->
+      <div class="blog-controls" data-animate data-delay="100">
+        <!-- Search -->
+        <form method="get" action="{% url 'blogs:blogs' %}" class="blog-search-wrap">
+          {% if current_category != 'all' %}
+            <input type="hidden" name="category" value="{{ current_category }}" />
+          {% endif %}
+          <span class="blog-search-icon" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+          </span>
+          <input
+            type="search"
+            name="q"
+            value="{{ search_query }}"
+            class="blog-search-input"
+            placeholder="Search articles by title, topic, or keyword..."
+            aria-label="Search articles"
+          />
+        </form>
+
+        <!-- Category Pills -->
+        <div class="blog-filters" role="tablist" aria-label="Filter articles by category">
+          <a
+            href="{% url 'blogs:blogs' %}{% if search_query %}?q={{ search_query }}{% endif %}"
+            class="blog-filter-btn {% if current_category == 'all' %}active{% endif %}"
+            role="tab"
+            aria-selected="{% if current_category == 'all' %}true{% else %}false{% endif %}"
+          >
+            All ({{ total_db_articles }})
+          </a>
+          {% for cat in categories %}
+            <a
+              href="{% url 'blogs:blogs' %}?category={{ cat.slug }}{% if search_query %}&q={{ search_query }}{% endif %}"
+              class="blog-filter-btn {% if current_category == cat.slug %}active{% endif %}"
+              role="tab"
+              aria-selected="{% if current_category == cat.slug %}true{% else %}false{% endif %}"
+            >
+              {{ cat.name }} ({{ cat.post_count }})
+            </a>
+          {% endfor %}
+        </div>
+      </div>
+
+      <!-- FEATURED ARTICLE HERO CARD -->
+      {% if featured_post and not search_query and current_category == 'all' %}
+        <article class="blog-featured" data-animate data-delay="150" aria-label="Featured article: {{ featured_post.title }}">
+          <div class="blog-featured__content">
+            <div class="blog-featured__meta">
+              <span class="blog-badge">Featured Article</span>
+              <span class="blog-badge blog-badge--blue">{{ featured_post.category }}</span>
+              <span class="blog-meta-item">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                {{ featured_post.read_time }}
+              </span>
+            </div>
+            <h2 class="blog-featured__title">
+              <a href="{% url 'blogs:blog_detail' featured_post.slug %}">{{ featured_post.title }}</a>
+            </h2>
+            <p class="blog-featured__excerpt">{{ featured_post.excerpt }}</p>
+            <div class="blog-featured__footer">
+              <div class="blog-author">
+                <div class="blog-author__avatar" aria-hidden="true">{{ featured_post.author_avatar }}</div>
+                <div class="blog-author__info">
+                  <span class="blog-author__name">{{ featured_post.author }}</span>
+                  <span class="blog-author__role">{{ featured_post.author_role }} · {{ featured_post.published_date }}</span>
+                </div>
+              </div>
+              <a href="{% url 'blogs:blog_detail' featured_post.slug %}" class="btn btn--gold" aria-label="Read full article on {{ featured_post.title }}">
+                Read Article &nbsp;→
+              </a>
+            </div>
+          </div>
+          <div class="blog-featured__visual" aria-hidden="true">
+            {% if featured_post.image %}
+              <img src="{{ featured_post.image.url }}" alt="{{ featured_post.title }}" style="width:100%; height:100%; object-fit:cover; border-radius:inherit;" />
+            {% else %}
+              <div class="blog-featured__icon-graphic">⚡</div>
+            {% endif %}
+          </div>
+        </article>
+      {% endif %}
+
+      <!-- ARTICLES GRID -->
+      {% if posts %}
+        <div class="blogs-grid">
+          {% for post in posts %}
+            <article class="blog-card" data-animate data-delay="100">
+              {% if post.image %}
+                <div class="blog-card__thumb" style="height:170px; overflow:hidden; border-bottom:1px solid var(--clr-border);">
+                  <img src="{{ post.image.url }}" alt="{{ post.title }}" style="width:100%; height:100%; object-fit:cover;" />
+                </div>
+              {% endif %}
+              <div class="blog-card__body">
+                <div class="blog-card__meta">
+                  <span class="blog-badge blog-badge--blue">{{ post.category }}</span>
+                  <span class="blog-meta-item">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                    {{ post.read_time }}
+                  </span>
+                </div>
+                <h3 class="blog-card__title">
+                  <a href="{% url 'blogs:blog_detail' post.slug %}">{{ post.title }}</a>
+                </h3>
+                <p class="blog-card__excerpt">{{ post.excerpt }}</p>
+
+                <!-- Tags -->
+                {% if post.tag_list %}
+                  <div class="blog-card__tags">
+                    {% for tag in post.tag_list %}
+                      <span class="blog-tag">{{ tag }}</span>
+                    {% endfor %}
+                  </div>
+                {% elif post.tags %}
+                  <div class="blog-card__tags">
+                    {% for tag in post.tags %}
+                      <span class="blog-tag">{{ tag }}</span>
+                    {% endfor %}
+                  </div>
+                {% endif %}
+
+                <!-- Footer -->
+                <div class="blog-card__footer">
+                  <div class="blog-author">
+                    <div class="blog-author__avatar" style="width:32px; height:32px; font-size:0.7rem;" aria-hidden="true">
+                      {{ post.author_avatar }}
+                    </div>
+                    <div class="blog-author__info">
+                      <span class="blog-author__name" style="font-size:0.78rem;">{{ post.author }}</span>
+                      <span class="blog-author__role" style="font-size:0.68rem;">{{ post.published_date }}</span>
+                    </div>
+                  </div>
+                  <a href="{% url 'blogs:blog_detail' post.slug %}" class="blog-read-link" aria-label="Read {{ post.title }}">
+                    Read →
+                  </a>
+                </div>
+              </div>
+            </article>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div style="text-align:center; padding: 4rem 1rem;" data-animate>
+          <div style="font-size:3rem; margin-bottom:1rem;" aria-hidden="true">🔍</div>
+          <h3 style="font-family:var(--font-display); font-size:1.4rem; color:var(--clr-text-primary); margin-bottom:0.5rem;">
+            No Articles Found
+          </h3>
+          <p style="color:var(--clr-text-muted); margin-bottom:1.5rem;">
+            We couldn't find any articles matching your search criteria.
+          </p>
+          <a href="{% url 'blogs:blogs' %}" class="btn btn--outline">Reset Filters</a>
+        </div>
+      {% endif %}
+
+      <!-- NEWSLETTER SUBSCRIPTION -->
+      <div class="blog-newsletter" data-animate data-delay="150">
+        <div class="blog-newsletter__inner">
+          <div class="blog-badge" style="margin-bottom:1rem;">Stay Informed</div>
+          <h2 class="blog-newsletter__heading">Insights Delivered to <span>Your Inbox</span></h2>
+          <p class="blog-newsletter__sub">
+            Join thousands of engineering leads, developers, and tech executives who receive
+            our monthly breakdown of enterprise tech trends, architectural patterns, and security alerts.
+          </p>
+          <form class="blog-newsletter__form" onsubmit="event.preventDefault(); alert('Thank you for subscribing to Cryptbyte Insights!');">
+            <input
+              type="email"
+              class="blog-newsletter__input"
+              placeholder="Enter your work email address..."
+              required
+              aria-label="Email address for newsletter"
+            />
+            <button type="submit" class="btn btn--gold">Subscribe &nbsp;→</button>
+          </form>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- CTA BANNER -->
+  <section class="section section--alt" aria-label="Blog call to action">
+    <div class="section__inner">
+      <div class="cta-banner" data-animate>
+        <h2 class="cta-banner__heading">Have a Complex Challenge to <span>Solve?</span></h2>
+        <p class="cta-banner__sub">Our engineering team designs, develops, and deploys intelligent software systems tailored to your mission.</p>
+        <div class="cta-banner__actions">
+          <a href="{% url 'contact:contact' %}" id="blogs-cta-contact" class="btn btn--gold">Start a Conversation &nbsp;→</a>
+          <a href="{% url 'services:services' %}" id="blogs-cta-services" class="btn btn--outline">Explore Our Services</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+{% endblock %}
+
