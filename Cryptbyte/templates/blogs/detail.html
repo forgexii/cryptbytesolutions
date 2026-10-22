@@ -81,12 +81,12 @@
       <footer class="article-footer">
         <div class="article-tags-wrap">
           <span style="font-size:0.75rem; color:var(--clr-text-muted); font-weight:600; text-transform:uppercase; letter-spacing:1px;">Tags:</span>
-          {% for tag in post.tags %}
+          {% for tag in post.tag_list %}
             <span class="blog-tag">{{ tag }}</span>
           {% endfor %}
         </div>
         <div>
-          <a href="{% url 'blogs:blogs' %}" class="btn btn--outline" style="padding:0.4rem 1rem; font-size:0.78rem;">
+          <a href="{% url 'blogs:blogs' %}" data-back="true" id="blog-back-btn" class="btn btn--outline" style="padding:0.4rem 1rem; font-size:0.78rem;">
             ← Back to All Articles
           </a>
         </div>
@@ -160,7 +160,7 @@
         <p class="cta-banner__sub">Let's discuss how our technical expertise in software, AI, and cybersecurity can elevate your business.</p>
         <div class="cta-banner__actions">
           <a href="{% url 'contact:contact' %}" class="btn btn--gold">Talk to an Architect &nbsp;→</a>
-          <a href="{% url 'blogs:blogs' %}" class="btn btn--outline">Browse All Articles</a>
+          <a href="{% url 'blogs:blogs' %}" data-back="true" class="btn btn--outline">Browse All Articles</a>
         </div>
       </div>
     </div>

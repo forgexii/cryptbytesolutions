@@ -44,6 +44,18 @@ class Solution(models.Model):
             return f"{title} ({self.category})"
         return title
 
+    def save(self, *args, **kwargs):
+        if not self.slug and self.title:
+            from django.utils.text import slugify
+            base_slug = slugify(self.title) or 'solution'
+            slug = base_slug
+            counter = 1
+            while Solution.objects.filter(slug=slug).exclude(pk=self.pk).exists():
+                slug = f"{base_slug}-{counter}"
+                counter += 1
+            self.slug = slug
+        super().save(*args, **kwargs)
+
     def get_metrics(self):
         try:
             return json.loads(self.metrics_json) if self.metrics_json else []
@@ -73,3 +85,13 @@ class Solution(models.Model):
         if not self.technologies:
             return []
         return [t.strip() for t in self.technologies.split(',') if t.strip()]
+
+    @property
+    def quick_facts(self):
+        return {
+            'timeline': self.timeline or '4 to 8 weeks',
+            'delivery_model': self.delivery_model or 'Agile sprints with weekly demos',
+            'target_industries': self.target_industries or 'Finance, Healthcare, SaaS, Logistics',
+            'deployment': self.deployment or 'Cloud-native, Dedicated VPC, or Hybrid',
+            'compliance': self.compliance or 'SOC 2 Type II, ISO 27001, and GDPR aligned',
+        }

@@ -106,4 +106,50 @@ document.addEventListener('DOMContentLoaded', () => {
     counters.forEach(c => countObserver.observe(c));
   }
 
+  // ─── Universal Seamless Back Navigation ────────────────────────────────────
+  document.addEventListener('click', (e) => {
+    const backBtn = e.target.closest('[data-back="true"], .btn-back, [id$="-back"], [id$="-back-btn"]');
+    if (!backBtn) return;
+
+    e.preventDefault();
+    const fallback = backBtn.getAttribute('href') || '/';
+
+    // 1. If opened in a new tab or popup from another page on the same origin
+    if (window.opener && !window.opener.closed) {
+      try {
+        if (window.opener.location.origin === window.location.origin) {
+          window.close();
+          return;
+        }
+      } catch (err) {}
+    }
+
+    // 2. If there is a valid same-origin referrer
+    if (document.referrer) {
+      try {
+        const refUrl = new URL(document.referrer);
+        if (refUrl.origin === window.location.origin) {
+          // If referrer is a different page, return to it (preserves queries, search & page)
+          if (refUrl.pathname !== window.location.pathname) {
+            window.location.href = document.referrer;
+            return;
+          }
+          // If referrer is the exact same page (e.g. form re-rendered after validation error),
+          // navigate to fallback destination to avoid error loops
+          window.location.href = fallback;
+          return;
+        }
+      } catch (err) {}
+    }
+
+    // 3. If browser history contains previous entries
+    if (window.history.length > 1) {
+      window.history.back();
+      return;
+    }
+
+    // 4. Default fallback redirect
+    window.location.href = fallback;
+  });
+
 });

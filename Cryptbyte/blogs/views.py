@@ -61,7 +61,11 @@ def blog_list(request):
 
 def blog_detail(request, slug):
     """Detailed view for a single blog post."""
-    post = BlogPost.objects.filter(slug=slug, is_published=True).select_related('category').first()
+    if request.user.is_staff:
+        post = BlogPost.objects.filter(slug=slug).select_related('category').first()
+    else:
+        post = BlogPost.objects.filter(slug=slug, is_published=True).select_related('category').first()
+
     if not post:
         raise Http404("Article not found")
 

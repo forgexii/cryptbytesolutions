@@ -34,6 +34,18 @@ class Project(models.Model):
             return f"{title} ({cat})"
         return title
 
+    def save(self, *args, **kwargs):
+        if not self.slug and self.title:
+            from django.utils.text import slugify
+            base_slug = slugify(self.title) or 'project'
+            slug = base_slug
+            counter = 1
+            while Project.objects.filter(slug=slug).exclude(pk=self.pk).exists():
+                slug = f"{base_slug}-{counter}"
+                counter += 1
+            self.slug = slug
+        super().save(*args, **kwargs)
+
     @property
     def stack_list(self):
         if not self.stack:

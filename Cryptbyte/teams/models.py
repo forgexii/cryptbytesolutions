@@ -16,6 +16,18 @@ class Department(models.Model):
     def __str__(self):
         return self.name or "Unnamed Department"
 
+    def save(self, *args, **kwargs):
+        if not self.slug and self.name:
+            from django.utils.text import slugify
+            base_slug = slugify(self.name) or 'department'
+            slug = base_slug
+            counter = 1
+            while Department.objects.filter(slug=slug).exclude(pk=self.pk).exists():
+                slug = f"{base_slug}-{counter}"
+                counter += 1
+            self.slug = slug
+        super().save(*args, **kwargs)
+
     @property
     def member_count(self):
         return self.members.count()
@@ -44,6 +56,18 @@ class Specialization(models.Model):
         if self.department and self.department.name:
             return f"{self.name or 'Specialization'} ({self.department.name})"
         return self.name or "Unnamed Specialization"
+
+    def save(self, *args, **kwargs):
+        if not self.slug and self.name:
+            from django.utils.text import slugify
+            base_slug = slugify(self.name) or 'specialization'
+            slug = base_slug
+            counter = 1
+            while Specialization.objects.filter(slug=slug).exclude(pk=self.pk).exists():
+                slug = f"{base_slug}-{counter}"
+                counter += 1
+            self.slug = slug
+        super().save(*args, **kwargs)
 
 
 class TeamMember(models.Model):
@@ -99,6 +123,12 @@ class TeamMember(models.Model):
             elif parts:
                 self.initials = parts[0][:2].upper()
         super().save(*args, **kwargs)
+
+    @property
+    def display_department(self):
+        if self.department and self.department.name:
+            return self.department.name
+        return self.department_name or "General"
 
     @property
     def skill_list(self):

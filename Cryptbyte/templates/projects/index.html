@@ -82,7 +82,10 @@
               <span class="stack-pill">{{ tech }}</span>
             {% endfor %}
           </div>
-          <a href="{% url 'contact:contact' %}" id="featured-enquire" class="btn btn--gold">Enquire About This &nbsp;→</a>
+          <div style="display:flex; gap:12px; flex-wrap:wrap;">
+            <a href="{% url 'projects:project_detail' featured_project.slug %}" class="btn btn--gold">View Case Study &nbsp;→</a>
+            <a href="{% url 'contact:contact' %}" id="featured-enquire" class="btn btn--outline">Enquire About This</a>
+          </div>
         </div>
       </div>
       {% endif %}
@@ -129,13 +132,18 @@
               </div>
             {% endif %}
             <div class="project-card__body">
-              <h3 class="project-card__title">{{ proj.title }}</h3>
-              <p class="project-card__desc">{{ proj.description }}</p>
-              <div class="project-card__stack">
+              <h3 class="project-card__title">
+                <a href="{% url 'projects:project_detail' proj.slug %}" style="color:inherit; text-decoration:none;">{{ proj.title }}</a>
+              </h3>
+              <p class="project-card__desc">{{ proj.description|truncatewords:24 }}</p>
+              <div class="project-card__stack" style="margin-bottom:1.25rem;">
                 {% for tag in proj.stack_list %}
                   <span class="stack-pill">{{ tag }}</span>
                 {% endfor %}
               </div>
+              <a href="{% url 'projects:project_detail' proj.slug %}" class="btn btn--outline btn--xs">
+                View Case Study &nbsp;→
+              </a>
             </div>
           </article>
         {% endfor %}

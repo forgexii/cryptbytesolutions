@@ -42,7 +42,7 @@
           <a href="{% url 'contact:contact' %}" class="btn btn--gold" id="solution-hero-contact">
             Discuss This Solution &nbsp;→
           </a>
-          <a href="{% url 'solutions:solutions' %}" class="btn btn--outline" id="solution-hero-back">
+          <a href="{% url 'solutions:solutions' %}" data-back="true" class="btn btn--outline" id="solution-hero-back">
             ← All Solutions
           </a>
         </div>
@@ -202,23 +202,23 @@
               <div class="spec-list">
                 <div class="spec-item">
                   <span class="spec-item__label">Typical Delivery</span>
-                  <span class="spec-item__val">{{ solution.timeline|default:solution.quick_facts.timeline }}</span>
+                  <span class="spec-item__val">{{ solution.timeline|default:'4 to 8 weeks' }}</span>
                 </div>
                 <div class="spec-item">
                   <span class="spec-item__label">Engagement Model</span>
-                  <span class="spec-item__val">{{ solution.delivery_model|default:solution.quick_facts.delivery_model }}</span>
+                  <span class="spec-item__val">{{ solution.delivery_model|default:'Agile sprints with weekly demos' }}</span>
                 </div>
                 <div class="spec-item">
                   <span class="spec-item__label">Target Industries</span>
-                  <span class="spec-item__val">{{ solution.target_industries|default:solution.quick_facts.target_industries }}</span>
+                  <span class="spec-item__val">{{ solution.target_industries|default:'Finance, Healthcare, SaaS, Logistics' }}</span>
                 </div>
                 <div class="spec-item">
                   <span class="spec-item__label">Deployment</span>
-                  <span class="spec-item__val">{{ solution.deployment|default:solution.quick_facts.deployment }}</span>
+                  <span class="spec-item__val">{{ solution.deployment|default:'Cloud-native, Dedicated VPC, or Hybrid' }}</span>
                 </div>
                 <div class="spec-item">
                   <span class="spec-item__label">Security &amp; Standards</span>
-                  <span class="spec-item__val">{{ solution.compliance|default:solution.quick_facts.compliance }}</span>
+                  <span class="spec-item__val">{{ solution.compliance|default:'SOC 2 Type II, ISO 27001, and GDPR aligned' }}</span>
                 </div>
               </div>
             </div>
@@ -294,7 +294,7 @@
         </p>
         <div class="cta-banner__actions">
           <a href="{% url 'contact:contact' %}" class="btn btn--gold">Talk to an Architect &nbsp;→</a>
-          <a href="{% url 'solutions:solutions' %}" class="btn btn--outline">All Solutions</a>
+          <a href="{% url 'solutions:solutions' %}" data-back="true" class="btn btn--outline">All Solutions</a>
         </div>
       </div>
     </div>

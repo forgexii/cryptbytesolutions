@@ -19,9 +19,15 @@
       <button type="submit" class="btn btn--danger">
         Yes, Permanently Delete
       </button>
-      <a href="{% url cancel_url %}" class="btn btn--outline">
-        Cancel &amp; Go Back
-      </a>
+      {% if cancel_url %}
+        <a href="{% url cancel_url %}" data-back="true" class="btn btn--outline">
+          Cancel &amp; Go Back
+        </a>
+      {% else %}
+        <a href="{% url 'dashboard:home' %}" data-back="true" class="btn btn--outline">
+          Cancel &amp; Go Back
+        </a>
+      {% endif %}
     </form>
   </div>
 

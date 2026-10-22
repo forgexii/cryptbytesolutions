@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block topbar_actions %}
-  <a href="{% url 'dashboard:department_list' %}" class="btn btn--outline btn--sm">← Back to Overview</a>
+  <a href="{% url 'dashboard:department_list' %}" data-back="true" class="btn btn--outline btn--sm">← Back to Overview</a>
 {% endblock %}
 
 {% block dash_content %}
@@ -78,7 +78,7 @@
         <button type="submit" class="btn btn--gold">
           {% if is_edit %}Save Changes{% else %}Create {{ type }}{% endif %} &nbsp;→
         </button>
-        <a href="{% url 'dashboard:department_list' %}" class="btn btn--outline">Cancel</a>
+        <a href="{% url 'dashboard:department_list' %}" data-back="true" class="btn btn--outline">Cancel</a>
       </div>
 
     </form>

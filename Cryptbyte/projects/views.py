@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, Http404
 from django.db.models import Q
 from .models import Project
 
@@ -57,4 +57,22 @@ def projects(request):
         'search_query': search_query,
         'total_count': len(all_projects),
         'total_db_count': total_db_count,
+    })
+
+
+def project_detail(request, slug):
+    """Detailed case study view for an individual project."""
+    if request.user.is_staff:
+        project = Project.objects.filter(slug=slug).first()
+    else:
+        project = Project.objects.filter(slug=slug, is_published=True).first()
+
+    if not project:
+        raise Http404("Project not found")
+
+    other_projects = Project.objects.filter(is_published=True).exclude(id=project.id)[:3]
+
+    return render(request, 'projects/detail.html', {
+        'project': project,
+        'other_projects': other_projects,
     })

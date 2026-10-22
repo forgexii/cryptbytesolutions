@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404, Http404
 from django.db.models import Q
 from .models import TeamMember, Department, Specialization
 
@@ -62,4 +62,18 @@ def team_list(request):
         'all_members_count': all_members_count,
         'total_departments': total_departments,
         'total_specializations': total_specializations,
+    })
+
+
+def team_detail(request, pk):
+    """Detailed profile view for an individual team member."""
+    member = get_object_or_404(
+        TeamMember.objects.select_related('department').prefetch_related('specializations'),
+        pk=pk
+    )
+    other_members = TeamMember.objects.exclude(pk=member.pk).select_related('department')[:4]
+
+    return render(request, 'teams/detail.html', {
+        'member': member,
+        'other_members': other_members,
     })

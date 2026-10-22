@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block topbar_actions %}
-  <a href="{% url 'dashboard:team_list' %}" class="btn btn--outline btn--sm">← Back to Team</a>
+  <a href="{% url 'dashboard:team_list' %}" data-back="true" class="btn btn--outline btn--sm">← Back to Team</a>
 {% endblock %}
 
 {% block dash_content %}
@@ -135,7 +135,7 @@
         <button type="submit" class="btn btn--gold">
           {% if is_edit %}Save Changes{% else %}Add Team Member{% endif %} &nbsp;→
         </button>
-        <a href="{% url 'dashboard:team_list' %}" class="btn btn--outline">Cancel</a>
+        <a href="{% url 'dashboard:team_list' %}" data-back="true" class="btn btn--outline">Cancel</a>
       </div>
 
     </form>

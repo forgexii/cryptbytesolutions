@@ -17,6 +17,18 @@ class BlogCategory(models.Model):
     def __str__(self):
         return self.name or "Unnamed Category"
 
+    def save(self, *args, **kwargs):
+        if not self.slug and self.name:
+            from django.utils.text import slugify
+            base_slug = slugify(self.name) or 'category'
+            slug = base_slug
+            counter = 1
+            while BlogCategory.objects.filter(slug=slug).exclude(pk=self.pk).exists():
+                slug = f"{base_slug}-{counter}"
+                counter += 1
+            self.slug = slug
+        super().save(*args, **kwargs)
+
     @property
     def post_count(self):
         return self.posts.filter(is_published=True).count()
@@ -54,6 +66,15 @@ class BlogPost(models.Model):
         return self.title or "Untitled Blog Post"
 
     def save(self, *args, **kwargs):
+        if not self.slug and self.title:
+            from django.utils.text import slugify
+            base_slug = slugify(self.title) or 'post'
+            slug = base_slug
+            counter = 1
+            while BlogPost.objects.filter(slug=slug).exclude(pk=self.pk).exists():
+                slug = f"{base_slug}-{counter}"
+                counter += 1
+            self.slug = slug
         if self.category and self.category.name:
             self.category_name = self.category.name
         if not self.author_avatar and self.author:

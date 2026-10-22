@@ -31,7 +31,11 @@ def solutions(request):
 
 def solution_detail(request, slug):
     """Detailed explanation page for a specific Cryptbyte Solution."""
-    solution = Solution.objects.filter(slug=slug, is_published=True).first()
+    if request.user.is_staff:
+        solution = Solution.objects.filter(slug=slug).first()
+    else:
+        solution = Solution.objects.filter(slug=slug, is_published=True).first()
+
     if not solution:
         raise Http404("Solution not found")
 
