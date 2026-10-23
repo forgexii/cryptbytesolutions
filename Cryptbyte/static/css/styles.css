@@ -731,6 +731,16 @@ ul { list-style: none; }
   justify-content: flex-end !important;
 }
 
+/* Disable native browser password reveal and clear buttons */
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
 .d-none {
   display: none !important;
 }

@@ -177,21 +177,35 @@ document.addEventListener('DOMContentLoaded', () => {
   // ---------------------------------------------------------------------------
   // Dashboard Login Password Visibility Toggle
   // ---------------------------------------------------------------------------
-  const toggleBtn = document.getElementById('toggle-pw-btn');
-  const pwInput = document.getElementById('id_password');
-  const eyeIcon = document.getElementById('eye-icon');
-  const eyeOffIcon = document.getElementById('eye-off-icon');
+  const EYE_OPEN_PATH = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
+  const EYE_SLASH_PATH = '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>';
 
-  if (toggleBtn && pwInput) {
-    toggleBtn.addEventListener('click', () => {
-      const isPassword = pwInput.type === 'password';
-      pwInput.type = isPassword ? 'text' : 'password';
-      if (eyeIcon && eyeOffIcon) {
-        eyeIcon.classList.toggle('d-none', isPassword);
-        eyeOffIcon.classList.toggle('d-none', !isPassword);
-      }
-    });
-  }
+  document.addEventListener('click', (e) => {
+    const toggleBtn = e.target.closest('#toggle-pw-btn, .login-toggle-pw');
+    if (!toggleBtn) return;
+
+    e.preventDefault();
+    const pwInput = document.getElementById('id_password') || toggleBtn.closest('.login-input-wrap')?.querySelector('input');
+    if (!pwInput) return;
+
+    const eyeIcon = toggleBtn.querySelector('svg') || document.getElementById('eye-icon');
+    const isPassword = pwInput.type === 'password';
+
+    pwInput.type = isPassword ? 'text' : 'password';
+
+    if (eyeIcon) {
+      eyeIcon.innerHTML = isPassword ? EYE_SLASH_PATH : EYE_OPEN_PATH;
+    }
+
+    toggleBtn.setAttribute('aria-label', isPassword ? 'Hide password' : 'Show password');
+    toggleBtn.setAttribute('title', isPassword ? 'Hide password' : 'Show password');
+    toggleBtn.setAttribute('aria-pressed', isPassword ? 'true' : 'false');
+
+    if (typeof pwInput.setSelectionRange === 'function') {
+      const len = pwInput.value.length;
+      pwInput.setSelectionRange(len, len);
+    }
+  });
 
   // ---------------------------------------------------------------------------
   // Article Share / Copy Link

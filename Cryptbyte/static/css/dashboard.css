@@ -275,6 +275,17 @@
   opacity: 0.55;
 }
 
+/* Disable native browser password reveal icons (Edge, IE, Chromium) */
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear,
+input[type="password"]::-webkit-credentials-auto-fill-button {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+  pointer-events: none !important;
+  visibility: hidden !important;
+}
+
 .login-toggle-pw {
   position: absolute;
   right: 12px;
@@ -284,13 +295,17 @@
   cursor: pointer;
   display: flex;
   align-items: center;
+  justify-content: center;
   padding: 6px;
   border-radius: var(--radius-sm);
-  transition: color var(--transition-fast);
+  transition: color var(--transition-fast), background var(--transition-fast);
+  z-index: 2;
 }
 
-.login-toggle-pw:hover {
+.login-toggle-pw:hover,
+.login-toggle-pw:focus-visible {
   color: var(--clr-gold);
+  outline: none;
 }
 
 /* Checkbox */

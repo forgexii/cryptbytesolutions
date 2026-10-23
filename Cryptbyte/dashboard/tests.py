@@ -101,6 +101,14 @@ class DashboardSecurityTestCase(TestCase):
         )
         self.assertRedirects(response, safe_url)
 
+    def test_login_page_renders_single_password_toggle(self):
+        # Verify that login page provides exactly one password toggle control
+        response = self.client.get(reverse('dashboard:login'))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'id="toggle-pw-btn"')
+        self.assertContains(response, 'id="eye-icon"')
+        self.assertNotContains(response, 'id="eye-off-icon"')
+
 
 class PublicEndpointsTestCase(TestCase):
     def setUp(self):
