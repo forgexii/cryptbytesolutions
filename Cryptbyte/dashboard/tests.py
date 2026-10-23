@@ -1,3 +1,10 @@
+"""
+Cryptbyte Solutions - Automated Regression & Security Test Suite
+
+Tests core utilities, authentication authorization, open redirect defenses,
+public view availability, portfolio relationships, and form validation security.
+"""
+
 from django.test import TestCase, Client
 from django.contrib.auth.models import User
 from django.urls import reverse
@@ -15,6 +22,7 @@ from projects.models import Project
 
 
 class CentralUtilsTestCase(TestCase):
+    """Verifies core utility functions in Cryptbyte/utils.py."""
     def test_generate_initials(self):
         self.assertEqual(generate_initials('Marcus Vance'), 'MV')
         self.assertEqual(generate_initials('Vance'), 'VA')

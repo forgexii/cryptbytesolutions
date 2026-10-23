@@ -1,3 +1,9 @@
+"""
+Cryptbyte Solutions - Projects URL Configuration
+
+Maps public routes for the projects portfolio catalog and case study detail views.
+"""
+
 from django.urls import path
 from . import views
 

@@ -1,8 +1,21 @@
+"""
+Cryptbyte Solutions - Solutions Data Models
+
+Defines commercial product solutions, system architecture breakdowns,
+delivery timelines, industry focus, and structured JSON roadmap/metric payloads.
+"""
+
 from django.db import models
 from Cryptbyte.utils import generate_unique_slug, parse_json_list, split_comma_string
 
 
 class Solution(models.Model):
+    """
+    Commercial enterprise solution offering by Cryptbyte Solutions.
+
+    Stores rich architectural details including structured metrics, challenge-solution
+    breakdowns, technical capabilities, delivery roadmaps, and compliance targets.
+    """
     ICON_CHOICES = [
         ('automation', 'Automation / Enterprise'),
         ('analytics', 'Analytics / Charts'),
@@ -45,28 +58,35 @@ class Solution(models.Model):
         return title
 
     def save(self, *args, **kwargs):
+        """Auto-populate unique slug from solution title on initial persistence."""
         if not self.slug and self.title:
             self.slug = generate_unique_slug(self, self.title, fallback='solution')
         super().save(*args, **kwargs)
 
     def get_metrics(self):
+        """Safely deserialize metrics JSON payload into a list of metric dicts."""
         return parse_json_list(self.metrics_json)
 
     def get_challenges(self):
+        """Safely deserialize challenges JSON payload into a list of problem-solution dicts."""
         return parse_json_list(self.challenges_json)
 
     def get_capabilities(self):
+        """Safely deserialize capabilities JSON payload into a list of capability dicts."""
         return parse_json_list(self.capabilities_json)
 
     def get_roadmap(self):
+        """Safely deserialize roadmap JSON payload into a list of sprint phase dicts."""
         return parse_json_list(self.roadmap_json)
 
     @property
     def tech_list(self):
+        """Parse comma-separated technology tags into a list of clean tokens."""
         return split_comma_string(self.technologies)
 
     @property
     def quick_facts(self):
+        """Convenience dictionary of delivery, compliance, and deployment specifications."""
         return {
             'timeline': self.timeline or '4 to 8 weeks',
             'delivery_model': self.delivery_model or 'Agile sprints with weekly demos',

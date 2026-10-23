@@ -1,27 +1,29 @@
 """
-URL configuration for Cryptbyte project.
+Cryptbyte Solutions - Main URL Configuration
 
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/6.1/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
+Directs incoming HTTP requests to dedicated application routing modules:
+- admin/: Django administrative dashboard.
+- home/: Landing page and core firm overview.
+- about/: Corporate mission, engineering pillars, and statistics.
+- services/: Technical service offerings and architectural capabilities.
+- solutions/: Modular product solutions and domain case breakdowns.
+- projects/: Portfolio case studies and live client demonstrations.
+- teams/: Staff directory, leadership profiles, and specialization filters.
+- blogs/: Engineering insights, tech articles, and category archives.
+- contact/: Communication channels and enquiry dispatch.
+- dashboard/: Internal staff management portal with secure authentication and CRUD.
 """
+
 from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
+    # Built-in Django administrative panel
     path('admin/', admin.site.urls),
-    # Public-facing routes
+
+    # Public-facing commercial and informational routes
     path('', include('home.urls')),
     path('about/', include('about.urls')),
     path('services/', include('services.urls')),
@@ -30,9 +32,11 @@ urlpatterns = [
     path('teams/', include('teams.urls')),
     path('blogs/', include('blogs.urls')),
     path('contact/', include('contact.urls')),
-    # Staff admin panel
+
+    # Internal staff administration and content management portal
     path('dashboard/', include('dashboard.urls')),
 ]
 
+# Development media serving (in production, media is served by reverse proxy or cloud storage)
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

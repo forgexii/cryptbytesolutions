@@ -635,23 +635,43 @@ ul { list-style: none; }
     text-align: center;
     gap: var(--space-lg);
   }
+
+  .footer__brand {
+    justify-content: center;
+    text-align: center;
+  }
 }
 
 /* ========================================================
    GLOBAL FOOTER BRAND & BREADCRUMBS
    ======================================================== */
 .footer__brand {
-  display: flex;
+  display: inline-flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: 0.65rem;
 }
 
 .footer__brand-icon {
-  width: 24px;
-  height: 24px;
+  width: 18px;
+  height: 18px;
+  max-width: 18px;
+  max-height: 18px;
   object-fit: contain;
   mix-blend-mode: screen;
-  filter: drop-shadow(0 0 8px rgba(240, 165, 0, 0.5));
+  filter: drop-shadow(0 0 4px rgba(240, 165, 0, 0.35));
+  flex-shrink: 0;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.footer__dot-sep {
+  color: var(--clr-text-muted);
+  font-size: 0.75rem;
+  opacity: 0.55;
+  user-select: none;
+  display: inline-block;
+  vertical-align: middle;
 }
 
 .breadcrumb-nav {

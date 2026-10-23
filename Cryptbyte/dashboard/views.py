@@ -1,3 +1,16 @@
+"""
+Cryptbyte Solutions - Staff Administration Dashboard Views
+
+Provides authenticated administrative endpoints for the internal management portal:
+- Authentication: Secure login, open-redirect protection, and session termination.
+- Overview: Real-time firm KPIs, publishing metrics, and recent activity streams.
+- Blogs CRUD: Article authoring, draft toggling, editing, and deletion.
+- Solutions CRUD: Enterprise product solutions, JSON metrics/roadmaps management.
+- Projects CRUD: Flagship case studies, technology stacks, and live links management.
+- Teams CRUD: Personnel directory, roles, leadership designation, and portfolio links.
+- Departments & Specializations CRUD: Corporate hierarchy and technical focus management.
+"""
+
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
@@ -21,12 +34,24 @@ from .forms import (
 
 
 def is_staff(user):
-    """Only allow staff and admin users into the dashboard."""
+    """
+    Check whether a user is authenticated and holds active staff permissions.
+
+    Args:
+        user (User): The request user to inspect.
+
+    Returns:
+        bool: True if user is authenticated and is_staff is True, else False.
+    """
     return user.is_authenticated and user.is_staff
 
 
 def staff_member_required(view_func):
-    """Decorator ensuring user is authenticated and is a staff administrator."""
+    """
+    View decorator requiring user authentication and active staff permissions.
+
+    Redirects unauthorized or unauthenticated users to the dashboard login page.
+    """
     return user_passes_test(is_staff, login_url='dashboard:login')(view_func)
 
 
@@ -34,7 +59,21 @@ def staff_member_required(view_func):
 # AUTHENTICATION
 # ========================================================
 def dashboard_login(request):
-    """Staff login page for Cryptbyte dashboard."""
+    """
+    Staff login view for authenticating internal administrators into the dashboard.
+
+    Security features:
+    - Restricts dashboard entry strictly to users with is_staff=True.
+    - Validates target redirect URLs using url_has_allowed_host_and_scheme to prevent open redirects.
+    - Configures configurable session expiry (2 weeks for Remember Me, browser session otherwise).
+
+    Args:
+        request (HttpRequest): Standard Django HTTP request.
+
+    Returns:
+        HttpResponse: Rendered login page or HTTP redirect on successful authentication.
+    """
+    # If user is already authenticated with staff rights, skip login
     if request.user.is_authenticated and request.user.is_staff:
         return redirect('dashboard:home')
 
@@ -59,11 +98,13 @@ def dashboard_login(request):
             if user is not None:
                 if user.is_staff:
                     login(request, user)
+                    # Configure session persistence
                     if remember_me:
-                        request.session.set_expiry(1209600)
+                        request.session.set_expiry(1209600)  # 14 days
                     else:
-                        request.session.set_expiry(0)
+                        request.session.set_expiry(0)  # Browser session closure
 
+                    # Defend against open redirects
                     if next_url and url_has_allowed_host_and_scheme(next_url, allowed_hosts={request.get_host()}):
                         return redirect(next_url)
                     return redirect('dashboard:home')
@@ -80,7 +121,15 @@ def dashboard_login(request):
 
 
 def dashboard_logout(request):
-    """Secure logout for staff dashboard."""
+    """
+    Terminate staff administrative session and clear session credentials.
+
+    Args:
+        request (HttpRequest): Standard Django HTTP request.
+
+    Returns:
+        HttpResponseRedirect: Redirect to dashboard login with confirmation flash.
+    """
     logout(request)
     messages.info(request, "You have been logged out securely.")
     return redirect('dashboard:login')
@@ -91,7 +140,19 @@ def dashboard_logout(request):
 # ========================================================
 @staff_member_required
 def dashboard_home(request):
-    """Admin dashboard overview with metrics, quick actions, and recent activity."""
+    """
+    Render administrative overview dashboard with aggregate metrics and recent records.
+
+    Summarizes live database figures across blogs, solutions, projects, teams,
+    and feeds recent items to speed up editorial and content updates.
+
+    Args:
+        request (HttpRequest): Standard Django HTTP request.
+
+    Returns:
+        HttpResponse: Rendered dashboard overview template with stats and activity feeds.
+    """
+    # Aggregate counts across all entities
     total_blogs = BlogPost.objects.count()
     published_blogs = BlogPost.objects.filter(is_published=True).count()
     draft_blogs = total_blogs - published_blogs
@@ -106,6 +167,7 @@ def dashboard_home(request):
     total_depts = Department.objects.count()
     total_specs = Specialization.objects.count()
 
+    # Recent activity queries
     recent_blogs = BlogPost.objects.order_by('-created_at')[:5]
     recent_solutions = Solution.objects.order_by('-created_at')[:5]
     recent_projects = Project.objects.order_by('-created_at')[:5]
@@ -132,7 +194,17 @@ def dashboard_home(request):
 # ========================================================
 @staff_member_required
 def blog_list(request):
-    """Manage and search blog articles."""
+    """
+    List and filter engineering blog articles in the administration portal.
+
+    Supports keyword search and status filtering (published vs draft).
+
+    Args:
+        request (HttpRequest): Standard Django HTTP request.
+
+    Returns:
+        HttpResponse: Rendered blog articles management table.
+    """
     query = request.GET.get('q', '').strip()
     status_filter = request.GET.get('status', '').strip().lower()
 
@@ -163,7 +235,17 @@ def blog_list(request):
 
 @staff_member_required
 def blog_create(request):
-    """Create a new blog article."""
+    """
+    Handle creation and publishing of a new blog article.
+
+    Processes file uploads and enforces title, category, and content validations.
+
+    Args:
+        request (HttpRequest): Standard Django HTTP request.
+
+    Returns:
+        HttpResponse: Rendered form template or redirect to blog list on creation.
+    """
     if request.method == 'POST':
         form = BlogPostForm(request.POST, request.FILES)
         if form.is_valid():
@@ -183,7 +265,16 @@ def blog_create(request):
 
 @staff_member_required
 def blog_edit(request, pk):
-    """Edit an existing blog article."""
+    """
+    Edit an existing blog article and update associated media or tags.
+
+    Args:
+        request (HttpRequest): Standard Django HTTP request.
+        pk (int): Primary key ID of the BlogPost to modify.
+
+    Returns:
+        HttpResponse: Rendered edit form template or redirect on successful update.
+    """
     post = get_object_or_404(BlogPost, pk=pk)
     if request.method == 'POST':
         form = BlogPostForm(request.POST, request.FILES, instance=post)
@@ -205,7 +296,18 @@ def blog_edit(request, pk):
 
 @staff_member_required
 def blog_delete(request, pk):
-    """Delete a blog article."""
+    """
+    Prompt confirmation and handle permanent deletion of a blog article.
+
+    Requires POST submission to perform the deletion side effect.
+
+    Args:
+        request (HttpRequest): Standard Django HTTP request.
+        pk (int): Primary key ID of the BlogPost to delete.
+
+    Returns:
+        HttpResponse: Rendered delete confirmation template or redirect on deletion.
+    """
     post = get_object_or_404(BlogPost, pk=pk)
     if request.method == 'POST':
         title = post.title
@@ -224,7 +326,16 @@ def blog_delete(request, pk):
 
 @staff_member_required
 def blog_toggle_publish(request, pk):
-    """Quickly toggle publish status for a blog post."""
+    """
+    Quickly toggle the publication state (published vs draft) of a blog article.
+
+    Args:
+        request (HttpRequest): Standard Django HTTP request.
+        pk (int): Primary key ID of the BlogPost.
+
+    Returns:
+        HttpResponseRedirect: Redirect back to blog articles list with confirmation.
+    """
     post = get_object_or_404(BlogPost, pk=pk)
     post.is_published = not post.is_published
     post.save()
@@ -238,7 +349,15 @@ def blog_toggle_publish(request, pk):
 # ========================================================
 @staff_member_required
 def solution_list(request):
-    """Manage and search digital solutions."""
+    """
+    List, search, and manage enterprise solutions in the admin panel.
+
+    Args:
+        request (HttpRequest): Standard Django HTTP request.
+
+    Returns:
+        HttpResponse: Rendered solutions management table.
+    """
     query = request.GET.get('q', '').strip()
     status_filter = request.GET.get('status', '').strip().lower()
 
@@ -269,7 +388,15 @@ def solution_list(request):
 
 @staff_member_required
 def solution_create(request):
-    """Create a new solution."""
+    """
+    Create a new product solution with specifications and JSON payloads.
+
+    Args:
+        request (HttpRequest): Standard Django HTTP request.
+
+    Returns:
+        HttpResponse: Rendered solution creation form or redirect on save.
+    """
     if request.method == 'POST':
         form = SolutionForm(request.POST, request.FILES)
         if form.is_valid():
@@ -289,7 +416,16 @@ def solution_create(request):
 
 @staff_member_required
 def solution_edit(request, pk):
-    """Edit an existing solution."""
+    """
+    Modify an existing Solution record, roadmap, metrics, or delivery specs.
+
+    Args:
+        request (HttpRequest): Standard Django HTTP request.
+        pk (int): Primary key ID of the Solution.
+
+    Returns:
+        HttpResponse: Rendered solution edit form or redirect on save.
+    """
     solution = get_object_or_404(Solution, pk=pk)
     if request.method == 'POST':
         form = SolutionForm(request.POST, request.FILES, instance=solution)
@@ -311,7 +447,16 @@ def solution_edit(request, pk):
 
 @staff_member_required
 def solution_delete(request, pk):
-    """Delete a solution."""
+    """
+    Prompt confirmation and permanently delete a Solution offering.
+
+    Args:
+        request (HttpRequest): Standard Django HTTP request.
+        pk (int): Primary key ID of the Solution.
+
+    Returns:
+        HttpResponse: Rendered confirmation template or redirect on deletion.
+    """
     solution = get_object_or_404(Solution, pk=pk)
     if request.method == 'POST':
         title = solution.title
@@ -330,7 +475,16 @@ def solution_delete(request, pk):
 
 @staff_member_required
 def solution_toggle_publish(request, pk):
-    """Quickly toggle publish status for a solution."""
+    """
+    Toggle active publication visibility for a Solution offering.
+
+    Args:
+        request (HttpRequest): Standard Django HTTP request.
+        pk (int): Primary key ID of the Solution.
+
+    Returns:
+        HttpResponseRedirect: Redirect back to solutions list with confirmation.
+    """
     solution = get_object_or_404(Solution, pk=pk)
     solution.is_published = not solution.is_published
     solution.save()
@@ -344,7 +498,17 @@ def solution_toggle_publish(request, pk):
 # ========================================================
 @staff_member_required
 def project_list(request):
-    """Manage and search project portfolio."""
+    """
+    List and filter engineering portfolio projects in the admin panel.
+
+    Supports keyword search across titles, descriptions, and stacks, as well as category filtering.
+
+    Args:
+        request (HttpRequest): Standard Django HTTP request.
+
+    Returns:
+        HttpResponse: Rendered project management table.
+    """
     query = request.GET.get('q', '').strip()
     category_filter = request.GET.get('category', '').strip().lower()
 
@@ -374,7 +538,15 @@ def project_list(request):
 
 @staff_member_required
 def project_create(request):
-    """Create a new project portfolio item."""
+    """
+    Create a new portfolio case study with stack tags and demonstration links.
+
+    Args:
+        request (HttpRequest): Standard Django HTTP request.
+
+    Returns:
+        HttpResponse: Rendered project creation form or redirect on save.
+    """
     if request.method == 'POST':
         form = ProjectForm(request.POST, request.FILES)
         if form.is_valid():
@@ -394,7 +566,16 @@ def project_create(request):
 
 @staff_member_required
 def project_edit(request, pk):
-    """Edit an existing project."""
+    """
+    Edit an existing portfolio case study, featured status, or technology stack.
+
+    Args:
+        request (HttpRequest): Standard Django HTTP request.
+        pk (int): Primary key ID of the Project.
+
+    Returns:
+        HttpResponse: Rendered project edit form or redirect on save.
+    """
     project = get_object_or_404(Project, pk=pk)
     if request.method == 'POST':
         form = ProjectForm(request.POST, request.FILES, instance=project)
@@ -416,7 +597,16 @@ def project_edit(request, pk):
 
 @staff_member_required
 def project_delete(request, pk):
-    """Delete a project."""
+    """
+    Prompt confirmation and permanently delete a portfolio case study.
+
+    Args:
+        request (HttpRequest): Standard Django HTTP request.
+        pk (int): Primary key ID of the Project.
+
+    Returns:
+        HttpResponse: Rendered confirmation template or redirect on deletion.
+    """
     project = get_object_or_404(Project, pk=pk)
     if request.method == 'POST':
         title = project.title
@@ -435,7 +625,16 @@ def project_delete(request, pk):
 
 @staff_member_required
 def project_toggle_publish(request, pk):
-    """Quickly toggle publish status for a project."""
+    """
+    Toggle visibility status (published vs hidden) for a portfolio item.
+
+    Args:
+        request (HttpRequest): Standard Django HTTP request.
+        pk (int): Primary key ID of the Project.
+
+    Returns:
+        HttpResponseRedirect: Redirect back to projects list with confirmation.
+    """
     project = get_object_or_404(Project, pk=pk)
     project.is_published = not project.is_published
     project.save()
@@ -449,7 +648,17 @@ def project_toggle_publish(request, pk):
 # ========================================================
 @staff_member_required
 def team_list(request):
-    """Manage team members, roles, departments, and specializations."""
+    """
+    Manage team members, roles, department affiliations, and specializations.
+
+    Supports keyword search across names, roles, skills, and department/specialization filters.
+
+    Args:
+        request (HttpRequest): Standard Django HTTP request.
+
+    Returns:
+        HttpResponse: Rendered team directory management table.
+    """
     query = request.GET.get('q', '').strip()
     dept_filter = request.GET.get('department', '').strip().lower()
     spec_filter = request.GET.get('specialization', '').strip().lower()
@@ -493,7 +702,15 @@ def team_list(request):
 
 @staff_member_required
 def team_create(request):
-    """Add a new team member."""
+    """
+    Add a new team member with skills, credentials, and optional portfolio website URL.
+
+    Args:
+        request (HttpRequest): Standard Django HTTP request.
+
+    Returns:
+        HttpResponse: Rendered member creation form or redirect on save.
+    """
     if request.method == 'POST':
         form = TeamMemberForm(request.POST, request.FILES)
         if form.is_valid():
@@ -513,7 +730,16 @@ def team_create(request):
 
 @staff_member_required
 def team_edit(request, pk):
-    """Edit an existing team member."""
+    """
+    Edit an existing team member profile, social links, or portfolio URL.
+
+    Args:
+        request (HttpRequest): Standard Django HTTP request.
+        pk (int): Primary key ID of the TeamMember.
+
+    Returns:
+        HttpResponse: Rendered member edit form or redirect on save.
+    """
     member = get_object_or_404(TeamMember, pk=pk)
     if request.method == 'POST':
         form = TeamMemberForm(request.POST, request.FILES, instance=member)
@@ -535,7 +761,16 @@ def team_edit(request, pk):
 
 @staff_member_required
 def team_delete(request, pk):
-    """Delete a team member."""
+    """
+    Prompt confirmation and permanently delete a team member profile.
+
+    Args:
+        request (HttpRequest): Standard Django HTTP request.
+        pk (int): Primary key ID of the TeamMember.
+
+    Returns:
+        HttpResponse: Rendered confirmation template or redirect on deletion.
+    """
     member = get_object_or_404(TeamMember, pk=pk)
     if request.method == 'POST':
         name = member.name
@@ -557,7 +792,15 @@ def team_delete(request, pk):
 # ========================================================
 @staff_member_required
 def department_list(request):
-    """Manage organization departments and specializations."""
+    """
+    View all corporate organizational departments and nested specializations.
+
+    Args:
+        request (HttpRequest): Standard Django HTTP request.
+
+    Returns:
+        HttpResponse: Rendered departments and specializations overview.
+    """
     departments = Department.objects.prefetch_related('specializations', 'members').all()
     specializations = Specialization.objects.select_related('department').all()
 
@@ -571,7 +814,15 @@ def department_list(request):
 
 @staff_member_required
 def department_create(request):
-    """Create a new department."""
+    """
+    Create a new organizational department.
+
+    Args:
+        request (HttpRequest): Standard Django HTTP request.
+
+    Returns:
+        HttpResponse: Rendered department creation form or redirect on save.
+    """
     if request.method == 'POST':
         form = DepartmentForm(request.POST, request.FILES)
         if form.is_valid():
@@ -592,7 +843,16 @@ def department_create(request):
 
 @staff_member_required
 def department_edit(request, pk):
-    """Edit a department."""
+    """
+    Edit an existing department name, slug, or focus mandate.
+
+    Args:
+        request (HttpRequest): Standard Django HTTP request.
+        pk (int): Primary key ID of the Department.
+
+    Returns:
+        HttpResponse: Rendered department edit form or redirect on save.
+    """
     dept = get_object_or_404(Department, pk=pk)
     if request.method == 'POST':
         form = DepartmentForm(request.POST, request.FILES, instance=dept)
@@ -614,7 +874,16 @@ def department_edit(request, pk):
 
 @staff_member_required
 def department_delete(request, pk):
-    """Delete a department."""
+    """
+    Prompt confirmation and permanently delete an organizational department.
+
+    Args:
+        request (HttpRequest): Standard Django HTTP request.
+        pk (int): Primary key ID of the Department.
+
+    Returns:
+        HttpResponse: Rendered confirmation template or redirect on deletion.
+    """
     dept = get_object_or_404(Department, pk=pk)
     if request.method == 'POST':
         name = dept.name
@@ -633,7 +902,15 @@ def department_delete(request, pk):
 
 @staff_member_required
 def specialization_create(request):
-    """Create a new specialization."""
+    """
+    Create a new technical discipline associated with a parent department.
+
+    Args:
+        request (HttpRequest): Standard Django HTTP request.
+
+    Returns:
+        HttpResponse: Rendered specialization creation form or redirect on save.
+    """
     if request.method == 'POST':
         form = SpecializationForm(request.POST, request.FILES)
         if form.is_valid():
@@ -654,7 +931,16 @@ def specialization_create(request):
 
 @staff_member_required
 def specialization_edit(request, pk):
-    """Edit a specialization."""
+    """
+    Edit an existing specialization and its parent department mapping.
+
+    Args:
+        request (HttpRequest): Standard Django HTTP request.
+        pk (int): Primary key ID of the Specialization.
+
+    Returns:
+        HttpResponse: Rendered specialization edit form or redirect on save.
+    """
     spec = get_object_or_404(Specialization, pk=pk)
     if request.method == 'POST':
         form = SpecializationForm(request.POST, request.FILES, instance=spec)
@@ -676,7 +962,16 @@ def specialization_edit(request, pk):
 
 @staff_member_required
 def specialization_delete(request, pk):
-    """Delete a specialization."""
+    """
+    Prompt confirmation and permanently delete a technical specialization.
+
+    Args:
+        request (HttpRequest): Standard Django HTTP request.
+        pk (int): Primary key ID of the Specialization.
+
+    Returns:
+        HttpResponse: Rendered confirmation template or redirect on deletion.
+    """
     spec = get_object_or_404(Specialization, pk=pk)
     if request.method == 'POST':
         name = spec.name

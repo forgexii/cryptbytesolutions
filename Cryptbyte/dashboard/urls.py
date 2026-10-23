@@ -1,10 +1,19 @@
+"""
+Cryptbyte Solutions - Dashboard URL Configuration
+
+Maps internal administration endpoints for:
+- Authentication (login, logout, session management)
+- Overview dashboard KPIs
+- Full CRUD workflows for Blogs, Solutions, Projects, Teams, Departments, and Specializations.
+"""
+
 from django.urls import path
 from . import views
 
 app_name = 'dashboard'
 
 urlpatterns = [
-    # Overview & Auth
+    # Overview & Authentication
     path('', views.dashboard_home, name='home'),
     path('login/', views.dashboard_login, name='login'),
     path('logout/', views.dashboard_logout, name='logout'),

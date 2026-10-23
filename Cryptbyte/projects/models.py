@@ -1,8 +1,21 @@
+"""
+Cryptbyte Solutions - Projects Data Models
+
+Defines portfolio case studies, technology stacks, external demonstration links,
+repository references, and featured priority statuses.
+"""
+
 from django.db import models
 from Cryptbyte.utils import generate_unique_slug, split_comma_string
 
 
 class Project(models.Model):
+    """
+    Client case study or flagship engineering project demonstrated by Cryptbyte Solutions.
+
+    Includes category classifications (Web, AI/ML, Cloud, Security), technology stack tags,
+    external live deployment URLs, open-source repository URLs, and featured prominence.
+    """
     CATEGORY_CHOICES = [
         ('web', 'Web App'),
         ('ai', 'AI / ML'),
@@ -36,16 +49,19 @@ class Project(models.Model):
         return title
 
     def save(self, *args, **kwargs):
+        """Auto-populate collision-free slug from project title on initial persistence."""
         if not self.slug and self.title:
             self.slug = generate_unique_slug(self, self.title, fallback='project')
         super().save(*args, **kwargs)
 
     @property
     def stack_list(self):
+        """Parse comma-separated technology stack into a list of clean tokens."""
         return split_comma_string(self.stack)
 
     @property
     def category_icon(self):
+        """Emoji icon representing the project technical category."""
         icons = {
             'web': '🌐',
             'ai': '🤖',

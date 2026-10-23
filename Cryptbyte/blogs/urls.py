@@ -1,3 +1,9 @@
+"""
+Cryptbyte Solutions - Blogs URL Configuration
+
+Maps public routes for the editorial blog directory and individual article views.
+"""
+
 from django.urls import path
 from . import views
 

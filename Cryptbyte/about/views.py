@@ -1,3 +1,9 @@
+"""
+Cryptbyte Solutions - About Application Views
+
+Presents firm mission, engineering pillars, technical credentials, and department metrics.
+"""
+
 from django.shortcuts import render
 from projects.models import Project
 from solutions.models import Solution
@@ -6,7 +12,19 @@ from blogs.models import BlogPost
 
 
 def about(request):
-    """Public About page for Cryptbyte Solutions with live DB figures."""
+    """
+    Render the public About page with organizational credentials and figures.
+
+    Supplies metrics for firm scale, active engineering departments,
+    technical specializations, and thought leadership articles.
+
+    Args:
+        request (HttpRequest): Standard Django HTTP request.
+
+    Returns:
+        HttpResponse: Rendered About page with firm statistics context.
+    """
+    # Compute aggregate metrics across all active domains
     projects_count = Project.objects.filter(is_published=True).count()
     solutions_count = Solution.objects.filter(is_published=True).count()
     team_count = TeamMember.objects.count()

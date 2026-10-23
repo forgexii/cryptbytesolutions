@@ -1,16 +1,38 @@
+"""
+Cryptbyte Solutions - Blogs Application Views
+
+Provides public views for listing editorial insights with categories and keyword search,
+as well as detailed single-article views with related post recommendations.
+"""
+
 from django.shortcuts import render, Http404
 from django.db.models import Q
 from .models import BlogPost, BlogCategory
 
 
 def blog_list(request):
-    """List of all blog articles with category filtering and search."""
+    """
+    Render the public blog directory with category filtering and keyword search.
+
+    Supports:
+    - ?category=<slug>: Filters articles matching category slug or name.
+    - ?q=<keyword>: Case-insensitive search across title, excerpt, content, author, and tags.
+
+    Identifies a lead featured article for hero placement and lists remaining articles in grid.
+
+    Args:
+        request (HttpRequest): Standard Django HTTP request.
+
+    Returns:
+        HttpResponse: Rendered blog index template.
+    """
     category_param = request.GET.get('category', '').strip().lower()
     search_query = request.GET.get('q', '').strip()
 
+    # Query published articles with category relations preloaded
     posts_qs = BlogPost.objects.filter(is_published=True).select_related('category')
 
-    # Apply search filter
+    # Apply keyword search across multiple content fields
     if search_query:
         posts_qs = posts_qs.filter(
             Q(title__icontains=search_query) |
@@ -21,7 +43,7 @@ def blog_list(request):
             Q(category_name__icontains=search_query)
         )
 
-    # Apply category filter
+    # Apply category filter if active
     if category_param and category_param != 'all':
         posts_qs = posts_qs.filter(
             Q(category__slug=category_param) | Q(category_name__iexact=category_param)
@@ -33,12 +55,12 @@ def blog_list(request):
     total_db_articles = BlogPost.objects.filter(is_published=True).count()
     total_categories_count = categories.count()
 
-    # Determine featured post and remaining posts
+    # Determine featured hero post and remaining grid articles
     featured_post = None
     regular_posts = []
 
     if posts:
-        # Prefer post marked is_featured=True, else first post
+        # Prioritize explicit is_featured flag, else first post
         featured_candidates = [p for p in posts if p.is_featured]
         if featured_candidates:
             featured_post = featured_candidates[0]
@@ -60,7 +82,22 @@ def blog_list(request):
 
 
 def blog_detail(request, slug):
-    """Detailed view for a single blog post."""
+    """
+    Render a single full-length blog article.
+
+    Allows staff users to preview unpublished draft articles while ensuring the public
+    only accesses published posts. Fetches related articles based on category or tags.
+
+    Args:
+        request (HttpRequest): Standard Django HTTP request.
+        slug (str): Unique URL slug identifier for the article.
+
+    Returns:
+        HttpResponse: Rendered article detail page.
+
+    Raises:
+        Http404: If article does not exist or is unpublished for non-staff visitors.
+    """
     if request.user.is_staff:
         post = BlogPost.objects.filter(slug=slug).select_related('category').first()
     else:
@@ -69,6 +106,7 @@ def blog_detail(request, slug):
     if not post:
         raise Http404("Article not found")
 
+    # Query related reading suggestions
     related_posts = BlogPost.objects.filter(
         is_published=True
     ).exclude(id=post.id).filter(

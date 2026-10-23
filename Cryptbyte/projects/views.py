@@ -1,15 +1,39 @@
+"""
+Cryptbyte Solutions - Projects Application Views
+
+Provides public views for filtering case studies across technical categories and keywords,
+as well as detailed case study pages for individual projects.
+"""
+
 from django.shortcuts import render, Http404
 from django.db.models import Q
 from .models import Project
 
 
 def projects(request):
-    """Public Projects portfolio overview with search and category filtering."""
+    """
+    Render the public Projects portfolio with category filter tabs and search query.
+
+    Supports:
+    - ?category=<slug>: Filters projects by technical domain ('web', 'ai', 'cloud', 'security', 'all').
+    - ?q=<keyword>: Case-insensitive search across title, description, stack, and tagline.
+
+    Calculates live counts for each category to populate the filter badges and highlights
+    a lead featured project in the hero presentation.
+
+    Args:
+        request (HttpRequest): Standard Django HTTP request.
+
+    Returns:
+        HttpResponse: Rendered projects portfolio template.
+    """
     category_param = request.GET.get('category', '').strip().lower()
     search_query = request.GET.get('q', '').strip()
 
+    # Query published projects
     projects_qs = Project.objects.filter(is_published=True)
 
+    # Apply search filter
     if search_query:
         projects_qs = projects_qs.filter(
             Q(title__icontains=search_query) |
@@ -18,11 +42,13 @@ def projects(request):
             Q(tagline__icontains=search_query)
         )
 
+    # Apply category filter
     if category_param and category_param != 'all':
         projects_qs = projects_qs.filter(category=category_param)
 
     all_projects = list(projects_qs)
 
+    # Determine featured hero project and remaining grid case studies
     featured_project = None
     featured_candidates = [p for p in all_projects if p.is_featured]
     if featured_candidates:
@@ -34,6 +60,7 @@ def projects(request):
     else:
         grid_projects = []
 
+    # Category badge metrics
     total_db_count = Project.objects.filter(is_published=True).count()
     web_count = Project.objects.filter(is_published=True, category='web').count()
     ai_count = Project.objects.filter(is_published=True, category='ai').count()
@@ -61,7 +88,22 @@ def projects(request):
 
 
 def project_detail(request, slug):
-    """Detailed case study view for an individual project."""
+    """
+    Render a comprehensive case study view for an individual project.
+
+    Allows authenticated staff members to preview unpublished draft projects
+    while restricting public access exclusively to published work.
+
+    Args:
+        request (HttpRequest): Standard Django HTTP request.
+        slug (str): Unique URL slug identifier for the Project.
+
+    Returns:
+        HttpResponse: Rendered project detail template.
+
+    Raises:
+        Http404: If project does not exist or is unpublished for non-staff visitors.
+    """
     if request.user.is_staff:
         project = Project.objects.filter(slug=slug).first()
     else:
@@ -70,6 +112,7 @@ def project_detail(request, slug):
     if not project:
         raise Http404("Project not found")
 
+    # Fetch other case studies for discovery recommendations
     other_projects = Project.objects.filter(is_published=True).exclude(id=project.id)[:3]
 
     return render(request, 'projects/detail.html', {

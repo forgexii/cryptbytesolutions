@@ -1,3 +1,19 @@
+"""
+Cryptbyte Solutions - Dashboard Administration Forms
+
+Provides validated ModelForms for staff content management:
+- BlogPostForm: Authoring, editing, and publishing articles with rich content.
+- SolutionForm: Enterprise solutions with structured JSON payloads and metrics.
+- ProjectForm: Flagship engineering case studies, tech stacks, and live links.
+- TeamMemberForm: Staff profiles, leadership designations, and external portfolios.
+- DepartmentForm: Top-level organizational divisions and focus mandates.
+- SpecializationForm: Granular technical disciplines within departments.
+
+Includes defense-in-depth security validations:
+- Image file size restrictions (10 MB maximum).
+- JSON array structure and syntax verification.
+"""
+
 import json
 from django import forms
 from django.core.exceptions import ValidationError
@@ -10,7 +26,20 @@ MAX_UPLOAD_SIZE_BYTES = 10 * 1024 * 1024  # 10 MB limit to prevent resource exha
 
 
 def validate_image_upload(image):
-    """Ensure uploaded images do not exceed safe size limits."""
+    """
+    Ensure uploaded image file sizes do not exceed safe operational thresholds.
+
+    Guards against denial-of-service attempts via oversized media uploads.
+
+    Args:
+        image (UploadedFile): The uploaded file instance.
+
+    Returns:
+        UploadedFile: The validated image file.
+
+    Raises:
+        ValidationError: If the uploaded file exceeds 10 MB.
+    """
     if not image or not hasattr(image, 'size'):
         return image
     if image.size > MAX_UPLOAD_SIZE_BYTES:
@@ -19,7 +48,19 @@ def validate_image_upload(image):
 
 
 def validate_json_array(value, field_label):
-    """Validate that text content is a valid JSON array."""
+    """
+    Validate that user-submitted text contains well-formed JSON array syntax.
+
+    Args:
+        value (str): Raw JSON string input from the form textarea.
+        field_label (str): Human-readable name of the field for error reporting.
+
+    Returns:
+        str: Validated JSON string.
+
+    Raises:
+        ValidationError: If JSON is invalid or deserializes into a non-list object.
+    """
     if not value or not str(value).strip():
         return '[]'
     try:
@@ -32,6 +73,7 @@ def validate_json_array(value, field_label):
 
 
 class BlogPostForm(forms.ModelForm):
+    """Staff administration form for drafting, authoring, and publishing blog articles."""
     class Meta:
         model = BlogPost
         fields = [
@@ -57,10 +99,12 @@ class BlogPostForm(forms.ModelForm):
         }
 
     def clean_image(self):
+        """Validate image upload size."""
         return validate_image_upload(self.cleaned_data.get('image'))
 
 
 class SolutionForm(forms.ModelForm):
+    """Staff administration form for configuring enterprise solutions and JSON roadmaps."""
     class Meta:
         model = Solution
         fields = [
@@ -92,22 +136,28 @@ class SolutionForm(forms.ModelForm):
         }
 
     def clean_image(self):
+        """Validate image upload size."""
         return validate_image_upload(self.cleaned_data.get('image'))
 
     def clean_metrics_json(self):
+        """Validate metrics JSON structure."""
         return validate_json_array(self.cleaned_data.get('metrics_json'), 'Metrics JSON')
 
     def clean_challenges_json(self):
+        """Validate challenges JSON structure."""
         return validate_json_array(self.cleaned_data.get('challenges_json'), 'Challenges JSON')
 
     def clean_capabilities_json(self):
+        """Validate capabilities JSON structure."""
         return validate_json_array(self.cleaned_data.get('capabilities_json'), 'Capabilities JSON')
 
     def clean_roadmap_json(self):
+        """Validate roadmap JSON structure."""
         return validate_json_array(self.cleaned_data.get('roadmap_json'), 'Roadmap JSON')
 
 
 class ProjectForm(forms.ModelForm):
+    """Staff administration form for publishing portfolio case studies and tech stacks."""
     class Meta:
         model = Project
         fields = [
@@ -129,22 +179,12 @@ class ProjectForm(forms.ModelForm):
         }
 
     def clean_image(self):
+        """Validate image upload size."""
         return validate_image_upload(self.cleaned_data.get('image'))
-
-    def clean_metrics_json(self):
-        return validate_json_array(self.cleaned_data.get('metrics_json'), 'Metrics JSON')
-
-    def clean_challenges_json(self):
-        return validate_json_array(self.cleaned_data.get('challenges_json'), 'Challenges JSON')
-
-    def clean_capabilities_json(self):
-        return validate_json_array(self.cleaned_data.get('capabilities_json'), 'Capabilities JSON')
-
-    def clean_roadmap_json(self):
-        return validate_json_array(self.cleaned_data.get('roadmap_json'), 'Roadmap JSON')
 
 
 class TeamMemberForm(forms.ModelForm):
+    """Staff administration form for registering personnel profiles and portfolio links."""
     class Meta:
         model = TeamMember
         fields = [
@@ -170,10 +210,12 @@ class TeamMemberForm(forms.ModelForm):
         }
 
     def clean_image(self):
+        """Validate image upload size."""
         return validate_image_upload(self.cleaned_data.get('image'))
 
 
 class DepartmentForm(forms.ModelForm):
+    """Staff administration form for managing corporate organizational departments."""
     class Meta:
         model = Department
         fields = ['name', 'slug', 'description', 'order', 'image']
@@ -185,10 +227,12 @@ class DepartmentForm(forms.ModelForm):
         }
 
     def clean_image(self):
+        """Validate image upload size."""
         return validate_image_upload(self.cleaned_data.get('image'))
 
 
 class SpecializationForm(forms.ModelForm):
+    """Staff administration form for managing technical disciplines within departments."""
     class Meta:
         model = Specialization
         fields = ['name', 'slug', 'department', 'description', 'order', 'image']
@@ -201,5 +245,6 @@ class SpecializationForm(forms.ModelForm):
         }
 
     def clean_image(self):
+        """Validate image upload size."""
         return validate_image_upload(self.cleaned_data.get('image'))
 

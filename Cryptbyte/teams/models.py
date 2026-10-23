@@ -1,8 +1,22 @@
+"""
+Cryptbyte Solutions - Teams Data Models
+
+Defines the organizational hierarchy and member profiles:
+- Department: Top-level organizational unit (e.g. Engineering, AI Research, Cyber Defense).
+- Specialization: Technical domain or focus area nested within a department.
+- TeamMember: Staff profile containing roles, skills, social links, and portfolio references.
+"""
+
 from django.db import models
 from Cryptbyte.utils import generate_unique_slug, generate_initials, split_comma_string
 
 
 class Department(models.Model):
+    """
+    Top-level organizational department within Cryptbyte Solutions.
+
+    Groups specialized talent and provides filtering categories on public teams pages.
+    """
     name = models.CharField(max_length=100, unique=True, null=True, blank=True)
     slug = models.SlugField(max_length=100, unique=True, null=True, blank=True)
     description = models.TextField(blank=True, null=True)
@@ -18,16 +32,23 @@ class Department(models.Model):
         return self.name or "Unnamed Department"
 
     def save(self, *args, **kwargs):
+        """Auto-populate slug from department name on initial persistence."""
         if not self.slug and self.name:
             self.slug = generate_unique_slug(self, self.name, fallback='department')
         super().save(*args, **kwargs)
 
     @property
     def member_count(self):
+        """Total count of team members assigned to this department."""
         return self.members.count()
 
 
 class Specialization(models.Model):
+    """
+    Specific technical discipline or focus area nested within a department.
+
+    Assigned to team members to highlight granular technical capabilities.
+    """
     name = models.CharField(max_length=100, null=True, blank=True)
     slug = models.SlugField(max_length=100, unique=True, null=True, blank=True)
     department = models.ForeignKey(
@@ -52,12 +73,19 @@ class Specialization(models.Model):
         return self.name or "Unnamed Specialization"
 
     def save(self, *args, **kwargs):
+        """Auto-populate slug from specialization name on initial persistence."""
         if not self.slug and self.name:
             self.slug = generate_unique_slug(self, self.name, fallback='specialization')
         super().save(*args, **kwargs)
 
 
 class TeamMember(models.Model):
+    """
+    Professional profile of an individual engineer, researcher, or leadership member.
+
+    Contains personal bio, department affiliations, multi-discipline specializations,
+    skill tags, social profiles, and external portfolio URLs.
+    """
     name = models.CharField(max_length=120, null=True, blank=True)
     role = models.CharField(max_length=120, null=True, blank=True)
     department = models.ForeignKey(
@@ -99,6 +127,7 @@ class TeamMember(models.Model):
         return f"{name} - {role}"
 
     def save(self, *args, **kwargs):
+        """Auto-populate department snapshots and avatar initials on save."""
         if self.department:
             if self.department.name:
                 self.department_name = self.department.name
@@ -110,30 +139,37 @@ class TeamMember(models.Model):
 
     @property
     def display_department(self):
+        """Human-readable department name with fallback."""
         if self.department and self.department.name:
             return self.department.name
         return self.department_name or "General"
 
     @property
     def skill_list(self):
+        """Parse comma-separated skills string into a list of clean tokens."""
         return split_comma_string(self.skills)
 
     @property
     def specialization_list(self):
+        """List of active Specialization objects associated with this member."""
         return list(self.specializations.all())
 
     @property
     def linkedin(self):
+        """Convenience alias for linkedin_url."""
         return self.linkedin_url
 
     @property
     def github(self):
+        """Convenience alias for github_url."""
         return self.github_url
 
     @property
     def twitter(self):
+        """Convenience alias for twitter_url."""
         return self.twitter_url
 
     @property
     def portfolio(self):
+        """Convenience alias for portfolio_url."""
         return self.portfolio_url
