@@ -152,4 +152,93 @@ document.addEventListener('DOMContentLoaded', () => {
     window.location.href = fallback;
   });
 
+  // ---------------------------------------------------------------------------
+  // Project Category Filter Tabs
+  // ---------------------------------------------------------------------------
+  const filterBtns = document.querySelectorAll('.filter-btn');
+  const projectCards = document.querySelectorAll('[data-category]');
+
+  if (filterBtns.length && projectCards.length) {
+    filterBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        filterBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const cat = btn.dataset.filter;
+        projectCards.forEach(card => {
+          const match = cat === 'all' || card.dataset.category === cat;
+          card.style.opacity = match ? '1' : '0.25';
+          card.style.transform = match ? 'scale(1)' : 'scale(0.97)';
+          card.style.pointerEvents = match ? 'auto' : 'none';
+        });
+      });
+    });
+  }
+
+  // ---------------------------------------------------------------------------
+  // Dashboard Login Password Visibility Toggle
+  // ---------------------------------------------------------------------------
+  const toggleBtn = document.getElementById('toggle-pw-btn');
+  const pwInput = document.getElementById('id_password');
+  const eyeIcon = document.getElementById('eye-icon');
+  const eyeOffIcon = document.getElementById('eye-off-icon');
+
+  if (toggleBtn && pwInput) {
+    toggleBtn.addEventListener('click', () => {
+      const isPassword = pwInput.type === 'password';
+      pwInput.type = isPassword ? 'text' : 'password';
+      if (eyeIcon && eyeOffIcon) {
+        eyeIcon.classList.toggle('d-none', isPassword);
+        eyeOffIcon.classList.toggle('d-none', !isPassword);
+      }
+    });
+  }
+
+  // ---------------------------------------------------------------------------
+  // Article Share / Copy Link
+  // ---------------------------------------------------------------------------
+  document.addEventListener('click', (e) => {
+    const copyBtn = e.target.closest('[data-copy-link="true"], .article-share-btn[title="Copy Link"]');
+    if (!copyBtn) return;
+
+    e.preventDefault();
+    if (navigator.clipboard && window.location.href) {
+      navigator.clipboard.writeText(window.location.href)
+        .then(() => {
+          alert('Article link copied to clipboard!');
+        })
+        .catch(() => {
+          prompt('Copy article link:', window.location.href);
+        });
+    } else {
+      prompt('Copy article link:', window.location.href);
+    }
+  });
+
+  // ---------------------------------------------------------------------------
+  // Blog Newsletter Subscription Form
+  // ---------------------------------------------------------------------------
+  document.addEventListener('submit', (e) => {
+    const newsletterForm = e.target.closest('.blog-newsletter__form, [data-newsletter-form]');
+    if (!newsletterForm) return;
+
+    e.preventDefault();
+    const emailInput = newsletterForm.querySelector('input[type="email"]');
+    if (emailInput && emailInput.value.trim()) {
+      alert('Thank you for subscribing to Cryptbyte Insights!');
+      newsletterForm.reset();
+    }
+  });
+
+  // ---------------------------------------------------------------------------
+  // Dashboard Filter Select Auto-Submit
+  // ---------------------------------------------------------------------------
+  document.addEventListener('change', (e) => {
+    const selectEl = e.target.closest('select[data-auto-submit="true"], select.dash-select');
+    if (!selectEl) return;
+
+    if (selectEl.form) {
+      selectEl.form.submit();
+    }
+  });
+
 });

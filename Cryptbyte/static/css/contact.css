@@ -179,3 +179,36 @@
   .form-row { grid-template-columns: 1fr; }
 }
 
+/* ========================================================
+   CONTACT FORM & MEDIA ENHANCEMENTS
+   ======================================================== */
+.contact-follow-label {
+  font-size: 0.75rem;
+  color: var(--clr-text-muted);
+  margin-bottom: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.contact-network-img {
+  width: 100%;
+  border-radius: var(--radius-xl);
+  margin-top: 2rem;
+  border: 1px solid var(--clr-border);
+  opacity: 0.85;
+}
+
+.contact-submit-btn {
+  width: 100%;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.contact-secure-note {
+  text-align: center;
+  font-size: 0.75rem;
+  color: var(--clr-text-muted);
+  margin-top: 1rem;
+}
+

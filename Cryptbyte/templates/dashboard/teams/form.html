@@ -30,7 +30,7 @@
         <!-- Name -->
         <div class="form-group">
           <label class="form-label" for="{{ form.name.id_for_label }}">
-            Full Name <span style="color:var(--clr-gold);">*</span>
+            Full Name <span class="required-star">*</span>
           </label>
           {{ form.name }}
           {% if form.name.errors %}<span class="form-error">{{ form.name.errors.0 }}</span>{% endif %}
@@ -39,7 +39,7 @@
         <!-- Role -->
         <div class="form-group">
           <label class="form-label" for="{{ form.role.id_for_label }}">
-            Role / Job Title <span style="color:var(--clr-gold);">*</span>
+            Role / Job Title <span class="required-star">*</span>
           </label>
           {{ form.role }}
           {% if form.role.errors %}<span class="form-error">{{ form.role.errors.0 }}</span>{% endif %}
@@ -71,7 +71,7 @@
           <label class="form-label" for="{{ form.image.id_for_label }}">Profile Photo</label>
           {% if member.image %}
             <div class="current-image-preview">
-              <img src="{{ member.image.url }}" alt="Current member photo" class="dash-preview-img" style="border-radius:50%; width:72px; height:72px;" />
+              <img src="{{ member.image.url }}" alt="Current member photo" class="dash-preview-img dash-avatar-preview" />
               <span class="form-hint">Current photo attached. Upload a new image below to replace it.</span>
             </div>
           {% endif %}
@@ -104,7 +104,7 @@
           {{ form.bio }}
         </div>
 
-        <!-- Social URLs -->
+        <!-- Social & Portfolio URLs -->
         <div class="form-group">
           <label class="form-label" for="{{ form.linkedin_url.id_for_label }}">LinkedIn Profile URL</label>
           {{ form.linkedin_url }}
@@ -115,9 +115,14 @@
           {{ form.github_url }}
         </div>
 
-        <div class="form-group form-group--full">
+        <div class="form-group">
           <label class="form-label" for="{{ form.twitter_url.id_for_label }}">X (Twitter) Profile URL</label>
           {{ form.twitter_url }}
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="{{ form.portfolio_url.id_for_label }}">Personal / Portfolio Website URL</label>
+          {{ form.portfolio_url }}
         </div>
 
         <!-- Leadership Option -->

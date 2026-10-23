@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils import timezone
+from Cryptbyte.utils import generate_unique_slug, generate_initials, split_comma_string
 
 
 class BlogCategory(models.Model):
@@ -19,14 +20,7 @@ class BlogCategory(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.slug and self.name:
-            from django.utils.text import slugify
-            base_slug = slugify(self.name) or 'category'
-            slug = base_slug
-            counter = 1
-            while BlogCategory.objects.filter(slug=slug).exclude(pk=self.pk).exists():
-                slug = f"{base_slug}-{counter}"
-                counter += 1
-            self.slug = slug
+            self.slug = generate_unique_slug(self, self.name, fallback='category')
         super().save(*args, **kwargs)
 
     @property
@@ -67,29 +61,16 @@ class BlogPost(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.slug and self.title:
-            from django.utils.text import slugify
-            base_slug = slugify(self.title) or 'post'
-            slug = base_slug
-            counter = 1
-            while BlogPost.objects.filter(slug=slug).exclude(pk=self.pk).exists():
-                slug = f"{base_slug}-{counter}"
-                counter += 1
-            self.slug = slug
+            self.slug = generate_unique_slug(self, self.title, fallback='post')
         if self.category and self.category.name:
             self.category_name = self.category.name
         if not self.author_avatar and self.author:
-            parts = self.author.strip().split()
-            if len(parts) >= 2:
-                self.author_avatar = (parts[0][0] + parts[-1][0]).upper()
-            elif parts:
-                self.author_avatar = parts[0][:2].upper()
+            self.author_avatar = generate_initials(self.author)
         super().save(*args, **kwargs)
 
     @property
     def tag_list(self):
-        if not self.tags:
-            return []
-        return [t.strip() for t in self.tags.split(',') if t.strip()]
+        return split_comma_string(self.tags)
 
     @property
     def display_category(self):

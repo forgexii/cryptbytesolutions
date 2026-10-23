@@ -11,30 +11,6 @@
   <link rel="stylesheet" href="{% static 'css/projects.css' %}" />
 {% endblock %}
 
-{% block extra_js %}
-<script>
-  // Project filter tabs
-  document.addEventListener('DOMContentLoaded', () => {
-    const filterBtns = document.querySelectorAll('.filter-btn');
-    const projectCards = document.querySelectorAll('[data-category]');
-
-    filterBtns.forEach(btn => {
-      btn.addEventListener('click', () => {
-        filterBtns.forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        const cat = btn.dataset.filter;
-        projectCards.forEach(card => {
-          const match = cat === 'all' || card.dataset.category === cat;
-          card.style.opacity = match ? '1' : '0.25';
-          card.style.transform = match ? 'scale(1)' : 'scale(0.97)';
-          card.style.pointerEvents = match ? 'auto' : 'none';
-        });
-      });
-    });
-  });
-</script>
-{% endblock %}
-
 {% block content %}
 
   <!-- PAGE HERO -->
@@ -49,7 +25,7 @@
       </h1>
       <p class="page-hero__sub" data-animate data-delay="160">
         Real work for real clients. Explore our portfolio of completed projects spanning
-        software engineering, AI, cybersecurity, and cloud infrastructure.
+        software engineering, AI, cybersecurity, and so much more.
       </p>
     </div>
   </section>
@@ -68,7 +44,7 @@
       <div class="project-featured" data-animate>
         <div class="project-featured__media" aria-hidden="true">
           {% if featured_project.image %}
-            <img src="{{ featured_project.image.url }}" alt="{{ featured_project.title }}" style="width:100%; height:100%; object-fit:cover; border-radius:var(--radius-lg);" />
+            <img src="{{ featured_project.image.url }}" alt="{{ featured_project.title }}" />
           {% else %}
             <div class="project-featured__media-icon">{{ featured_project.category_icon }}</div>
           {% endif %}
@@ -77,12 +53,12 @@
           <span class="project-featured__badge">Featured Project</span>
           <h2 id="featured-heading" class="project-featured__title">{{ featured_project.title }}</h2>
           <p class="project-featured__desc">{{ featured_project.description }}</p>
-          <div class="project-card__stack" style="margin-bottom:1.5rem;">
+          <div class="project-card__stack">
             {% for tech in featured_project.stack_list %}
               <span class="stack-pill">{{ tech }}</span>
             {% endfor %}
           </div>
-          <div style="display:flex; gap:12px; flex-wrap:wrap;">
+          <div class="project-featured__actions">
             <a href="{% url 'projects:project_detail' featured_project.slug %}" class="btn btn--gold">View Case Study &nbsp;→</a>
             <a href="{% url 'contact:contact' %}" id="featured-enquire" class="btn btn--outline">Enquire About This</a>
           </div>
@@ -118,8 +94,8 @@
         {% for proj in all_projects %}
           <article class="project-card" data-category="{{ proj.category }}" data-animate>
             {% if proj.image %}
-              <div class="project-card__thumb" style="height:180px; overflow:hidden; position:relative;">
-                <img src="{{ proj.image.url }}" alt="{{ proj.title }}" style="width:100%; height:100%; object-fit:cover;" />
+              <div class="project-card__thumb project-card__media-wrap">
+                <img src="{{ proj.image.url }}" alt="{{ proj.title }}" />
                 <div class="project-card__overlay">
                   <span class="project-card__tag">{{ proj.get_category_display }}</span>
                 </div>
@@ -133,10 +109,10 @@
             {% endif %}
             <div class="project-card__body">
               <h3 class="project-card__title">
-                <a href="{% url 'projects:project_detail' proj.slug %}" style="color:inherit; text-decoration:none;">{{ proj.title }}</a>
+                <a href="{% url 'projects:project_detail' proj.slug %}">{{ proj.title }}</a>
               </h3>
               <p class="project-card__desc">{{ proj.description|truncatewords:24 }}</p>
-              <div class="project-card__stack" style="margin-bottom:1.25rem;">
+              <div class="project-card__stack">
                 {% for tag in proj.stack_list %}
                   <span class="stack-pill">{{ tag }}</span>
                 {% endfor %}

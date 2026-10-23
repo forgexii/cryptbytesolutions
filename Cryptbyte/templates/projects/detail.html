@@ -9,101 +9,6 @@
 
 {% block extra_css %}
   <link rel="stylesheet" href="{% static 'css/projects.css' %}" />
-  <style>
-    .project-hero {
-      padding: calc(var(--navbar-height) + var(--space-2xl)) 0 var(--space-xl);
-      background: radial-gradient(circle at 80% 20%, rgba(30, 144, 255, 0.08) 0%, transparent 60%),
-                  radial-gradient(circle at 10% 80%, rgba(240, 165, 0, 0.06) 0%, transparent 50%),
-                  var(--clr-bg-primary);
-      border-bottom: 1px solid var(--clr-border);
-    }
-    .project-header-card {
-      background: var(--clr-bg-card);
-      border: 1px solid var(--clr-border);
-      border-radius: var(--radius-xl);
-      padding: 2.5rem;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-      margin-bottom: var(--space-2xl);
-    }
-    .project-banner-media {
-      width: 100%;
-      height: 380px;
-      border-radius: var(--radius-lg);
-      overflow: hidden;
-      margin-bottom: 2rem;
-      border: 1px solid var(--clr-border);
-      background: rgba(255, 255, 255, 0.02);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 5rem;
-    }
-    .project-banner-media img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-    .project-headline {
-      font-family: var(--font-display);
-      font-size: clamp(2rem, 3.5vw, 2.8rem);
-      font-weight: 800;
-      color: var(--clr-text-primary);
-      margin: 0.5rem 0 1rem;
-      line-height: 1.15;
-    }
-    .project-tagline {
-      font-size: 1.15rem;
-      color: var(--clr-gold);
-      font-weight: 500;
-      line-height: 1.6;
-      margin-bottom: 1.75rem;
-    }
-    .project-meta-bar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 1.25rem;
-      padding-top: 1.5rem;
-      border-top: 1px solid rgba(255, 255, 255, 0.06);
-    }
-    .project-stack-group {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-    .project-links-group {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      flex-wrap: wrap;
-    }
-    .case-study-body {
-      background: var(--clr-bg-card);
-      border: 1px solid var(--clr-border);
-      border-radius: var(--radius-xl);
-      padding: 2.5rem;
-      color: var(--clr-text-secondary);
-      line-height: 1.9;
-      font-size: 1.05rem;
-      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-    }
-    .case-study-heading {
-      font-family: var(--font-display);
-      font-size: 1.5rem;
-      font-weight: 700;
-      color: var(--clr-text-primary);
-      margin: 0 0 1.25rem 0;
-    }
-    @media (max-width: 768px) {
-      .project-banner-media {
-        height: 240px;
-      }
-      .project-header-card, .case-study-body {
-        padding: 1.75rem;
-      }
-    }
-  </style>
 {% endblock %}
 
 {% block content %}
@@ -113,7 +18,7 @@
     <div class="section__inner">
 
       <!-- Breadcrumbs -->
-      <nav class="breadcrumb-nav" aria-label="Breadcrumb" style="margin-bottom:2rem;" data-animate>
+      <nav class="breadcrumb-nav" aria-label="Breadcrumb" data-animate>
         <a href="{% url 'home:home' %}" class="breadcrumb-link">Home</a>
         <span class="breadcrumb-sep">/</span>
         <a href="{% url 'projects:projects' %}" class="breadcrumb-link">Projects</a>
@@ -133,8 +38,8 @@
           {% endif %}
         </div>
 
-        <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
-          <span class="project-card__tag" style="position:static;">{{ project.get_category_display }}</span>
+        <div class="project-badges-row">
+          <span class="project-card__tag project-card__tag--static">{{ project.get_category_display }}</span>
           {% if project.is_featured %}
             <span class="badge badge--gold">Featured Project</span>
           {% endif %}
@@ -175,7 +80,7 @@
       <!-- Case Study Description -->
       <div class="case-study-body" data-animate data-delay="120">
         <h2 class="case-study-heading">Project Overview &amp; Architecture</h2>
-        <div style="white-space:pre-line;">{{ project.description }}</div>
+        <div class="project-case-study__text">{{ project.description }}</div>
       </div>
 
     </div>
@@ -198,8 +103,8 @@
           {% for other in other_projects %}
             <article class="project-card" data-category="{{ other.category }}" data-animate data-delay="80">
               {% if other.image %}
-                <div class="project-card__thumb" style="height:180px; overflow:hidden; position:relative;">
-                  <img src="{{ other.image.url }}" alt="{{ other.title }}" style="width:100%; height:100%; object-fit:cover;" />
+                <div class="project-card__thumb project-card__media-wrap">
+                  <img src="{{ other.image.url }}" alt="{{ other.title }}" />
                   <div class="project-card__overlay">
                     <span class="project-card__tag">{{ other.get_category_display }}</span>
                   </div>
@@ -213,10 +118,10 @@
               {% endif %}
               <div class="project-card__body">
                 <h3 class="project-card__title">
-                  <a href="{% url 'projects:project_detail' other.slug %}" style="color:inherit; text-decoration:none;">{{ other.title }}</a>
+                  <a href="{% url 'projects:project_detail' other.slug %}">{{ other.title }}</a>
                 </h3>
                 <p class="project-card__desc">{{ other.description|truncatewords:18 }}</p>
-                <div class="project-card__stack" style="margin-bottom:1rem;">
+                <div class="project-card__stack project-card__desc--spacing">
                   {% for tag in other.stack_list %}
                     <span class="stack-pill">{{ tag }}</span>
                   {% endfor %}

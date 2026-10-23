@@ -486,3 +486,224 @@
   }
 }
 
+/* ========================================================
+   TEAM MEMBER DETAIL PROFILE & CARD ENHANCEMENTS
+   ======================================================== */
+.member-hero {
+  padding: calc(var(--navbar-height) + var(--space-2xl)) 0 var(--space-2xl);
+  background: radial-gradient(circle at 75% 20%, rgba(240, 165, 0, 0.08) 0%, transparent 60%),
+              radial-gradient(circle at 20% 80%, rgba(30, 144, 255, 0.06) 0%, transparent 50%),
+              var(--clr-bg-primary);
+  border-bottom: 1px solid var(--clr-border);
+}
+
+.member-profile-card {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 3rem;
+  background: var(--clr-bg-card);
+  border: 1px solid var(--clr-border);
+  border-radius: var(--radius-xl);
+  padding: 2.5rem;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+.member-media-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 1.5rem;
+}
+
+.member-lg-avatar {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  border: 3px solid var(--clr-gold);
+  box-shadow: 0 0 35px rgba(240, 165, 0, 0.25);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(240, 165, 0, 0.1);
+  font-size: 3.5rem;
+  font-weight: 800;
+  color: var(--clr-gold);
+}
+
+.member-lg-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.member-info-col {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.member-name-heading {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 3.5vw, 2.8rem);
+  font-weight: 800;
+  color: var(--clr-text-primary);
+  margin: 0;
+  line-height: 1.1;
+}
+
+.member-portfolio-link {
+  color: inherit;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: color var(--transition-fast);
+}
+
+.member-portfolio-link:hover {
+  color: var(--clr-gold);
+}
+
+.member-portfolio-link__icon {
+  opacity: 0.6;
+  transition: all var(--transition-fast);
+}
+
+.member-portfolio-link:hover .member-portfolio-link__icon {
+  opacity: 1;
+  color: var(--clr-gold);
+  transform: translate(2px, -2px);
+}
+
+.member-role-sub {
+  font-size: 1.2rem;
+  color: var(--clr-gold);
+  font-weight: 600;
+  margin: 0;
+}
+
+.member-badges-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.member-bio-text {
+  font-size: 1.05rem;
+  color: var(--clr-text-secondary);
+  line-height: 1.8;
+  margin: 0;
+}
+
+.member-skills-title {
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--clr-text-muted);
+  margin-bottom: 0.75rem;
+}
+
+.member-skills-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.member-skill-badge {
+  background: rgba(30, 144, 255, 0.1);
+  border: 1px solid var(--clr-border-blue);
+  color: var(--clr-blue-light);
+  padding: 6px 14px;
+  border-radius: var(--radius-full);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.member-skills-block {
+  margin-top: 0.5rem;
+}
+
+.member-social-buttons {
+  display: flex;
+  gap: 12px;
+  margin-top: 1rem;
+}
+
+.team-avatar img,
+.team-card__avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: inherit;
+}
+
+.member-back-btn {
+  margin-top: 0.5rem;
+}
+
+.team-card__name a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.team-card__name a:hover {
+  color: var(--clr-gold);
+}
+
+.team-card__footer--end {
+  justify-content: flex-end;
+}
+
+.team-card__meta-label {
+  font-size: 0.72rem;
+  color: var(--clr-text-muted);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.team-card__view-btn {
+  margin-left: auto;
+}
+
+.team-empty-state {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: var(--space-3xl);
+  background: var(--clr-bg-card);
+  border: 1px solid var(--clr-border);
+  border-radius: var(--radius-xl);
+}
+
+.team-empty-state__title {
+  font-size: 1.1rem;
+  color: var(--clr-text-primary);
+  margin-bottom: 8px;
+}
+
+.team-empty-state__desc {
+  font-size: 0.85rem;
+  color: var(--clr-text-muted);
+  margin-bottom: var(--space-lg);
+}
+
+.team-specialists-section {
+  margin-top: var(--space-3xl);
+}
+
+.team-culture-badge {
+  margin-bottom: 1rem;
+}
+
+@media (max-width: 860px) {
+  .member-profile-card {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    padding: 1.75rem;
+  }
+}
+

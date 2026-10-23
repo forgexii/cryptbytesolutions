@@ -27,7 +27,7 @@
               <th>Department</th>
               <th>Slug</th>
               <th>Members</th>
-              <th style="text-align:right;">Actions</th>
+              <th class="text-right">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -40,7 +40,7 @@
                 <td><code class="dash-code">{{ dept.slug }}</code></td>
                 <td><span class="badge badge--purple">{{ dept.member_count }}</span></td>
                 <td>
-                  <div class="dash-actions-cell" style="justify-content:flex-end;">
+                  <div class="dash-actions-cell justify-end">
                     <a href="{% url 'teams:teams' %}?department={{ dept.slug }}" class="action-btn" title="View department members">👁️</a>
                     <a href="{% url 'dashboard:department_edit' dept.pk %}" class="action-btn" title="Edit department">✏️</a>
                     <a href="{% url 'dashboard:department_delete' dept.pk %}" class="action-btn action-btn--danger" title="Delete department">🗑️</a>
@@ -73,7 +73,7 @@
             <tr>
               <th>Specialization</th>
               <th>Department</th>
-              <th style="text-align:right;">Actions</th>
+              <th class="text-right">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -91,7 +91,7 @@
                   {% endif %}
                 </td>
                 <td>
-                  <div class="dash-actions-cell" style="justify-content:flex-end;">
+                  <div class="dash-actions-cell justify-end">
                     <a href="{% url 'teams:teams' %}?specialization={{ spec.slug }}" class="action-btn" title="View specialization members">👁️</a>
                     <a href="{% url 'dashboard:specialization_edit' spec.pk %}" class="action-btn" title="Edit specialization">✏️</a>
                     <a href="{% url 'dashboard:specialization_delete' spec.pk %}" class="action-btn action-btn--danger" title="Delete specialization">🗑️</a>

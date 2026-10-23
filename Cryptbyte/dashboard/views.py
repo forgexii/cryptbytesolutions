@@ -1,11 +1,11 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.decorators import login_required, user_passes_test
+from django.contrib.auth.decorators import user_passes_test
 from django.utils.http import url_has_allowed_host_and_scheme
 from django.db.models import Q
 
-from blogs.models import BlogPost, BlogCategory
+from blogs.models import BlogPost
 from solutions.models import Solution
 from projects.models import Project
 from teams.models import TeamMember, Department, Specialization
@@ -23,6 +23,11 @@ from .forms import (
 def is_staff(user):
     """Only allow staff and admin users into the dashboard."""
     return user.is_authenticated and user.is_staff
+
+
+def staff_member_required(view_func):
+    """Decorator ensuring user is authenticated and is a staff administrator."""
+    return user_passes_test(is_staff, login_url='dashboard:login')(view_func)
 
 
 # ========================================================
@@ -84,8 +89,7 @@ def dashboard_logout(request):
 # ========================================================
 # DASHBOARD OVERVIEW
 # ========================================================
-@login_required(login_url='dashboard:login')
-@user_passes_test(is_staff, login_url='dashboard:login')
+@staff_member_required
 def dashboard_home(request):
     """Admin dashboard overview with metrics, quick actions, and recent activity."""
     total_blogs = BlogPost.objects.count()
@@ -126,8 +130,7 @@ def dashboard_home(request):
 # ========================================================
 # BLOGS CRUD
 # ========================================================
-@login_required(login_url='dashboard:login')
-@user_passes_test(is_staff, login_url='dashboard:login')
+@staff_member_required
 def blog_list(request):
     """Manage and search blog articles."""
     query = request.GET.get('q', '').strip()
@@ -158,8 +161,7 @@ def blog_list(request):
     })
 
 
-@login_required(login_url='dashboard:login')
-@user_passes_test(is_staff, login_url='dashboard:login')
+@staff_member_required
 def blog_create(request):
     """Create a new blog article."""
     if request.method == 'POST':
@@ -179,8 +181,7 @@ def blog_create(request):
     })
 
 
-@login_required(login_url='dashboard:login')
-@user_passes_test(is_staff, login_url='dashboard:login')
+@staff_member_required
 def blog_edit(request, pk):
     """Edit an existing blog article."""
     post = get_object_or_404(BlogPost, pk=pk)
@@ -202,8 +203,7 @@ def blog_edit(request, pk):
     })
 
 
-@login_required(login_url='dashboard:login')
-@user_passes_test(is_staff, login_url='dashboard:login')
+@staff_member_required
 def blog_delete(request, pk):
     """Delete a blog article."""
     post = get_object_or_404(BlogPost, pk=pk)
@@ -222,8 +222,7 @@ def blog_delete(request, pk):
     })
 
 
-@login_required(login_url='dashboard:login')
-@user_passes_test(is_staff, login_url='dashboard:login')
+@staff_member_required
 def blog_toggle_publish(request, pk):
     """Quickly toggle publish status for a blog post."""
     post = get_object_or_404(BlogPost, pk=pk)
@@ -237,8 +236,7 @@ def blog_toggle_publish(request, pk):
 # ========================================================
 # SOLUTIONS CRUD
 # ========================================================
-@login_required(login_url='dashboard:login')
-@user_passes_test(is_staff, login_url='dashboard:login')
+@staff_member_required
 def solution_list(request):
     """Manage and search digital solutions."""
     query = request.GET.get('q', '').strip()
@@ -269,8 +267,7 @@ def solution_list(request):
     })
 
 
-@login_required(login_url='dashboard:login')
-@user_passes_test(is_staff, login_url='dashboard:login')
+@staff_member_required
 def solution_create(request):
     """Create a new solution."""
     if request.method == 'POST':
@@ -290,8 +287,7 @@ def solution_create(request):
     })
 
 
-@login_required(login_url='dashboard:login')
-@user_passes_test(is_staff, login_url='dashboard:login')
+@staff_member_required
 def solution_edit(request, pk):
     """Edit an existing solution."""
     solution = get_object_or_404(Solution, pk=pk)
@@ -313,8 +309,7 @@ def solution_edit(request, pk):
     })
 
 
-@login_required(login_url='dashboard:login')
-@user_passes_test(is_staff, login_url='dashboard:login')
+@staff_member_required
 def solution_delete(request, pk):
     """Delete a solution."""
     solution = get_object_or_404(Solution, pk=pk)
@@ -333,8 +328,7 @@ def solution_delete(request, pk):
     })
 
 
-@login_required(login_url='dashboard:login')
-@user_passes_test(is_staff, login_url='dashboard:login')
+@staff_member_required
 def solution_toggle_publish(request, pk):
     """Quickly toggle publish status for a solution."""
     solution = get_object_or_404(Solution, pk=pk)
@@ -348,8 +342,7 @@ def solution_toggle_publish(request, pk):
 # ========================================================
 # PROJECTS CRUD
 # ========================================================
-@login_required(login_url='dashboard:login')
-@user_passes_test(is_staff, login_url='dashboard:login')
+@staff_member_required
 def project_list(request):
     """Manage and search project portfolio."""
     query = request.GET.get('q', '').strip()
@@ -379,8 +372,7 @@ def project_list(request):
     })
 
 
-@login_required(login_url='dashboard:login')
-@user_passes_test(is_staff, login_url='dashboard:login')
+@staff_member_required
 def project_create(request):
     """Create a new project portfolio item."""
     if request.method == 'POST':
@@ -400,8 +392,7 @@ def project_create(request):
     })
 
 
-@login_required(login_url='dashboard:login')
-@user_passes_test(is_staff, login_url='dashboard:login')
+@staff_member_required
 def project_edit(request, pk):
     """Edit an existing project."""
     project = get_object_or_404(Project, pk=pk)
@@ -423,8 +414,7 @@ def project_edit(request, pk):
     })
 
 
-@login_required(login_url='dashboard:login')
-@user_passes_test(is_staff, login_url='dashboard:login')
+@staff_member_required
 def project_delete(request, pk):
     """Delete a project."""
     project = get_object_or_404(Project, pk=pk)
@@ -443,8 +433,7 @@ def project_delete(request, pk):
     })
 
 
-@login_required(login_url='dashboard:login')
-@user_passes_test(is_staff, login_url='dashboard:login')
+@staff_member_required
 def project_toggle_publish(request, pk):
     """Quickly toggle publish status for a project."""
     project = get_object_or_404(Project, pk=pk)
@@ -458,8 +447,7 @@ def project_toggle_publish(request, pk):
 # ========================================================
 # TEAMS CRUD
 # ========================================================
-@login_required(login_url='dashboard:login')
-@user_passes_test(is_staff, login_url='dashboard:login')
+@staff_member_required
 def team_list(request):
     """Manage team members, roles, departments, and specializations."""
     query = request.GET.get('q', '').strip()
@@ -503,8 +491,7 @@ def team_list(request):
     })
 
 
-@login_required(login_url='dashboard:login')
-@user_passes_test(is_staff, login_url='dashboard:login')
+@staff_member_required
 def team_create(request):
     """Add a new team member."""
     if request.method == 'POST':
@@ -524,8 +511,7 @@ def team_create(request):
     })
 
 
-@login_required(login_url='dashboard:login')
-@user_passes_test(is_staff, login_url='dashboard:login')
+@staff_member_required
 def team_edit(request, pk):
     """Edit an existing team member."""
     member = get_object_or_404(TeamMember, pk=pk)
@@ -547,8 +533,7 @@ def team_edit(request, pk):
     })
 
 
-@login_required(login_url='dashboard:login')
-@user_passes_test(is_staff, login_url='dashboard:login')
+@staff_member_required
 def team_delete(request, pk):
     """Delete a team member."""
     member = get_object_or_404(TeamMember, pk=pk)
@@ -570,8 +555,7 @@ def team_delete(request, pk):
 # ========================================================
 # DEPARTMENTS & SPECIALIZATIONS CRUD
 # ========================================================
-@login_required(login_url='dashboard:login')
-@user_passes_test(is_staff, login_url='dashboard:login')
+@staff_member_required
 def department_list(request):
     """Manage organization departments and specializations."""
     departments = Department.objects.prefetch_related('specializations', 'members').all()
@@ -585,8 +569,7 @@ def department_list(request):
     })
 
 
-@login_required(login_url='dashboard:login')
-@user_passes_test(is_staff, login_url='dashboard:login')
+@staff_member_required
 def department_create(request):
     """Create a new department."""
     if request.method == 'POST':
@@ -607,8 +590,7 @@ def department_create(request):
     })
 
 
-@login_required(login_url='dashboard:login')
-@user_passes_test(is_staff, login_url='dashboard:login')
+@staff_member_required
 def department_edit(request, pk):
     """Edit a department."""
     dept = get_object_or_404(Department, pk=pk)
@@ -630,8 +612,7 @@ def department_edit(request, pk):
     })
 
 
-@login_required(login_url='dashboard:login')
-@user_passes_test(is_staff, login_url='dashboard:login')
+@staff_member_required
 def department_delete(request, pk):
     """Delete a department."""
     dept = get_object_or_404(Department, pk=pk)
@@ -650,8 +631,7 @@ def department_delete(request, pk):
     })
 
 
-@login_required(login_url='dashboard:login')
-@user_passes_test(is_staff, login_url='dashboard:login')
+@staff_member_required
 def specialization_create(request):
     """Create a new specialization."""
     if request.method == 'POST':
@@ -672,8 +652,7 @@ def specialization_create(request):
     })
 
 
-@login_required(login_url='dashboard:login')
-@user_passes_test(is_staff, login_url='dashboard:login')
+@staff_member_required
 def specialization_edit(request, pk):
     """Edit a specialization."""
     spec = get_object_or_404(Specialization, pk=pk)
@@ -695,8 +674,7 @@ def specialization_edit(request, pk):
     })
 
 
-@login_required(login_url='dashboard:login')
-@user_passes_test(is_staff, login_url='dashboard:login')
+@staff_member_required
 def specialization_delete(request, pk):
     """Delete a specialization."""
     spec = get_object_or_404(Specialization, pk=pk)

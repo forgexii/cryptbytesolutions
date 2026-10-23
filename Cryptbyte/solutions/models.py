@@ -1,5 +1,5 @@
-import json
 from django.db import models
+from Cryptbyte.utils import generate_unique_slug, parse_json_list, split_comma_string
 
 
 class Solution(models.Model):
@@ -46,45 +46,24 @@ class Solution(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.slug and self.title:
-            from django.utils.text import slugify
-            base_slug = slugify(self.title) or 'solution'
-            slug = base_slug
-            counter = 1
-            while Solution.objects.filter(slug=slug).exclude(pk=self.pk).exists():
-                slug = f"{base_slug}-{counter}"
-                counter += 1
-            self.slug = slug
+            self.slug = generate_unique_slug(self, self.title, fallback='solution')
         super().save(*args, **kwargs)
 
     def get_metrics(self):
-        try:
-            return json.loads(self.metrics_json) if self.metrics_json else []
-        except Exception:
-            return []
+        return parse_json_list(self.metrics_json)
 
     def get_challenges(self):
-        try:
-            return json.loads(self.challenges_json) if self.challenges_json else []
-        except Exception:
-            return []
+        return parse_json_list(self.challenges_json)
 
     def get_capabilities(self):
-        try:
-            return json.loads(self.capabilities_json) if self.capabilities_json else []
-        except Exception:
-            return []
+        return parse_json_list(self.capabilities_json)
 
     def get_roadmap(self):
-        try:
-            return json.loads(self.roadmap_json) if self.roadmap_json else []
-        except Exception:
-            return []
+        return parse_json_list(self.roadmap_json)
 
     @property
     def tech_list(self):
-        if not self.technologies:
-            return []
-        return [t.strip() for t in self.technologies.split(',') if t.strip()]
+        return split_comma_string(self.technologies)
 
     @property
     def quick_facts(self):

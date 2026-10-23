@@ -22,7 +22,7 @@
             placeholder="Search solutions by title, category, or stack..."
           />
         </div>
-        <select name="status" class="dash-select" onchange="this.form.submit()">
+        <select name="status" class="dash-select" data-auto-submit="true">
           <option value="all" {% if status_filter == 'all' %}selected{% endif %}>All Statuses</option>
           <option value="published" {% if status_filter == 'published' %}selected{% endif %}>Active Only</option>
           <option value="draft" {% if status_filter == 'draft' %}selected{% endif %}>Hidden Only</option>
@@ -41,12 +41,12 @@
       <table class="dash-table">
         <thead>
           <tr>
-            <th style="width:50px;">Media</th>
+            <th class="dash-col-avatar">Media</th>
             <th>Title &amp; Subtitle</th>
             <th>Category</th>
             <th>Timeline</th>
             <th>Status</th>
-            <th style="text-align:right;">Actions</th>
+            <th class="text-right">Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -75,7 +75,7 @@
                 </a>
               </td>
               <td>
-                <div class="dash-actions-cell" style="justify-content:flex-end;">
+                <div class="dash-actions-cell justify-end">
                   <a href="{% url 'solutions:detail' sol.slug %}" class="action-btn" title="View live page">👁️</a>
                   <a href="{% url 'dashboard:solution_edit' sol.pk %}" class="action-btn" title="Edit solution">✏️</a>
                   <a href="{% url 'dashboard:solution_delete' sol.pk %}" class="action-btn action-btn--danger" title="Delete solution">🗑️</a>
@@ -86,7 +86,7 @@
             <tr>
               <td colspan="6" class="dash-empty-cell">
                 No solutions found.
-                <div style="margin-top:10px;">
+                <div class="dash-table-note">
                   <a href="{% url 'dashboard:solution_create' %}" class="btn btn--gold btn--sm">+ Add New Solution</a>
                 </div>
               </td>

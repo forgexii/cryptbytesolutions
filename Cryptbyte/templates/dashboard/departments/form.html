@@ -30,7 +30,7 @@
         <!-- Name -->
         <div class="form-group">
           <label class="form-label" for="{{ form.name.id_for_label }}">
-            {{ type }} Name <span style="color:var(--clr-gold);">*</span>
+            {{ type }} Name <span class="required-star">*</span>
           </label>
           {{ form.name }}
           {% if form.name.errors %}<span class="form-error">{{ form.name.errors.0 }}</span>{% endif %}
@@ -39,7 +39,7 @@
         <!-- Slug -->
         <div class="form-group">
           <label class="form-label" for="{{ form.slug.id_for_label }}">
-            URL Slug <span style="color:var(--clr-gold);">*</span>
+            URL Slug <span class="required-star">*</span>
           </label>
           {{ form.slug }}
           {% if form.slug.errors %}<span class="form-error">{{ form.slug.errors.0 }}</span>{% endif %}

@@ -14,7 +14,7 @@
 
 {% block content %}
 
-  <section class="section" style="padding-top: calc(var(--navbar-height) + var(--space-2xl));">
+  <section class="section article-hero-section">
     <div class="article-container">
 
       <!-- Breadcrumbs -->
@@ -53,8 +53,8 @@
           </div>
 
           <div class="article-share-links" aria-label="Share article">
-            <span style="font-size:0.75rem; color:var(--clr-text-muted); font-weight:600; text-transform:uppercase; letter-spacing:1px; margin-right:4px;">Share:</span>
-            <button class="article-share-btn" onclick="navigator.clipboard.writeText(window.location.href); alert('Article link copied to clipboard!');" title="Copy Link" aria-label="Copy article link">
+            <span class="article-share-label">Share:</span>
+            <button class="article-share-btn" data-copy-link="true" title="Copy Link" aria-label="Copy article link">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
             </button>
             <a href="https://twitter.com/intent/tweet?text={{ post.title|urlencode }}&url={{ request.build_absolute_uri|urlencode }}" target="_blank" rel="noopener noreferrer" class="article-share-btn" title="Share on Twitter" aria-label="Share on Twitter">
@@ -70,8 +70,8 @@
       <!-- Article Content -->
       <article class="article-body">
         {% if post.image %}
-          <div class="article-featured-image" style="margin:0 0 var(--space-xl); border-radius:var(--radius-xl); overflow:hidden; border:1px solid var(--clr-border);">
-            <img src="{{ post.image.url }}" alt="{{ post.title }}" style="width:100%; max-height:450px; object-fit:cover; display:block;" />
+          <div class="article-featured-image">
+            <img src="{{ post.image.url }}" alt="{{ post.title }}" />
           </div>
         {% endif %}
         {{ post.content|safe }}
@@ -80,13 +80,13 @@
       <!-- Tags & Footer -->
       <footer class="article-footer">
         <div class="article-tags-wrap">
-          <span style="font-size:0.75rem; color:var(--clr-text-muted); font-weight:600; text-transform:uppercase; letter-spacing:1px;">Tags:</span>
+          <span class="article-tags-label">Tags:</span>
           {% for tag in post.tag_list %}
             <span class="blog-tag">{{ tag }}</span>
           {% endfor %}
         </div>
         <div>
-          <a href="{% url 'blogs:blogs' %}" data-back="true" id="blog-back-btn" class="btn btn--outline" style="padding:0.4rem 1rem; font-size:0.78rem;">
+          <a href="{% url 'blogs:blogs' %}" data-back="true" id="blog-back-btn" class="btn btn--outline btn-blog-back">
             ← Back to All Articles
           </a>
         </div>
@@ -137,10 +137,10 @@
                 <p class="blog-card__excerpt">{{ rpost.excerpt }}</p>
                 <div class="blog-card__footer">
                   <div class="blog-author">
-                    <div class="blog-author__avatar" style="width:30px; height:30px; font-size:0.65rem;" aria-hidden="true">
+                    <div class="blog-author__avatar blog-author__avatar--xs" aria-hidden="true">
                       {{ rpost.author_avatar }}
                     </div>
-                    <span class="blog-author__name" style="font-size:0.75rem;">{{ rpost.author }}</span>
+                    <span class="blog-author__name blog-author__name--sm">{{ rpost.author }}</span>
                   </div>
                   <a href="{% url 'blogs:blog_detail' rpost.slug %}" class="blog-read-link">Read →</a>
                 </div>

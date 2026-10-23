@@ -1,4 +1,5 @@
 from django.db import models
+from Cryptbyte.utils import generate_unique_slug, generate_initials, split_comma_string
 
 
 class Department(models.Model):
@@ -18,14 +19,7 @@ class Department(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.slug and self.name:
-            from django.utils.text import slugify
-            base_slug = slugify(self.name) or 'department'
-            slug = base_slug
-            counter = 1
-            while Department.objects.filter(slug=slug).exclude(pk=self.pk).exists():
-                slug = f"{base_slug}-{counter}"
-                counter += 1
-            self.slug = slug
+            self.slug = generate_unique_slug(self, self.name, fallback='department')
         super().save(*args, **kwargs)
 
     @property
@@ -59,14 +53,7 @@ class Specialization(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.slug and self.name:
-            from django.utils.text import slugify
-            base_slug = slugify(self.name) or 'specialization'
-            slug = base_slug
-            counter = 1
-            while Specialization.objects.filter(slug=slug).exclude(pk=self.pk).exists():
-                slug = f"{base_slug}-{counter}"
-                counter += 1
-            self.slug = slug
+            self.slug = generate_unique_slug(self, self.name, fallback='specialization')
         super().save(*args, **kwargs)
 
 
@@ -94,6 +81,7 @@ class TeamMember(models.Model):
     linkedin_url = models.URLField(blank=True, null=True)
     github_url = models.URLField(blank=True, null=True)
     twitter_url = models.URLField(blank=True, null=True)
+    portfolio_url = models.URLField(blank=True, null=True, help_text="Personal or professional portfolio website URL")
     order = models.PositiveIntegerField(default=0, null=True, blank=True)
     is_leadership = models.BooleanField(default=False, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
@@ -117,11 +105,7 @@ class TeamMember(models.Model):
             if self.department.slug:
                 self.department_slug = self.department.slug
         if not self.initials and self.name:
-            parts = self.name.strip().split()
-            if len(parts) >= 2:
-                self.initials = (parts[0][0] + parts[-1][0]).upper()
-            elif parts:
-                self.initials = parts[0][:2].upper()
+            self.initials = generate_initials(self.name)
         super().save(*args, **kwargs)
 
     @property
@@ -132,10 +116,24 @@ class TeamMember(models.Model):
 
     @property
     def skill_list(self):
-        if not self.skills:
-            return []
-        return [s.strip() for s in self.skills.split(',') if s.strip()]
+        return split_comma_string(self.skills)
 
     @property
     def specialization_list(self):
         return list(self.specializations.all())
+
+    @property
+    def linkedin(self):
+        return self.linkedin_url
+
+    @property
+    def github(self):
+        return self.github_url
+
+    @property
+    def twitter(self):
+        return self.twitter_url
+
+    @property
+    def portfolio(self):
+        return self.portfolio_url

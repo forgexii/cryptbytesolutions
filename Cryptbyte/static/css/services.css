@@ -15,6 +15,13 @@
   align-items: center;
 }
 
+.services-hero-img {
+  width: 100%;
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--clr-border);
+  filter: drop-shadow(0 0 40px rgba(30, 144, 255, 0.3));
+}
+
 /* Services Detail Grid */
 .services-grid {
   display: grid;

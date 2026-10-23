@@ -1305,3 +1305,34 @@
   opacity: 1;
   transform: none;
 }
+
+/* ========================================================
+   DASHBOARD TABLE & FORM UTILITY CLASSES
+   ======================================================== */
+.dash-col-avatar {
+  width: 50px;
+}
+
+.dash-avatar--circle {
+  border-radius: 50%;
+}
+
+.dash-avatar-preview {
+  border-radius: 50%;
+  width: 72px;
+  height: 72px;
+  object-fit: cover;
+}
+
+.dash-spec-pill {
+  font-size: 0.68rem;
+  margin: 2px 2px 2px 0;
+}
+
+.dash-table-note {
+  margin-top: 10px;
+}
+
+.dash-checkbox-spacing {
+  margin-left: 2rem;
+}

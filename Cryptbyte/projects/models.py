@@ -1,4 +1,5 @@
 from django.db import models
+from Cryptbyte.utils import generate_unique_slug, split_comma_string
 
 
 class Project(models.Model):
@@ -36,21 +37,12 @@ class Project(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.slug and self.title:
-            from django.utils.text import slugify
-            base_slug = slugify(self.title) or 'project'
-            slug = base_slug
-            counter = 1
-            while Project.objects.filter(slug=slug).exclude(pk=self.pk).exists():
-                slug = f"{base_slug}-{counter}"
-                counter += 1
-            self.slug = slug
+            self.slug = generate_unique_slug(self, self.title, fallback='project')
         super().save(*args, **kwargs)
 
     @property
     def stack_list(self):
-        if not self.stack:
-            return []
-        return [s.strip() for s in self.stack.split(',') if s.strip()]
+        return split_comma_string(self.stack)
 
     @property
     def category_icon(self):

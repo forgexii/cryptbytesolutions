@@ -22,7 +22,7 @@
             placeholder="Search projects by title, stack, or client..."
           />
         </div>
-        <select name="category" class="dash-select" onchange="this.form.submit()">
+        <select name="category" class="dash-select" data-auto-submit="true">
           <option value="all" {% if category_filter == 'all' %}selected{% endif %}>All Categories</option>
           {% for code, label in categories %}
             <option value="{{ code }}" {% if category_filter == code %}selected{% endif %}>{{ label }}</option>
@@ -42,13 +42,13 @@
       <table class="dash-table">
         <thead>
           <tr>
-            <th style="width:50px;">Media</th>
+            <th class="dash-col-avatar">Media</th>
             <th>Project Title</th>
             <th>Category</th>
             <th>Tech Stack</th>
             <th>Featured</th>
             <th>Status</th>
-            <th style="text-align:right;">Actions</th>
+            <th class="text-right">Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -84,7 +84,7 @@
                 </a>
               </td>
               <td>
-                <div class="dash-actions-cell" style="justify-content:flex-end;">
+                <div class="dash-actions-cell justify-end">
                   <a href="{% url 'projects:project_detail' proj.slug %}" class="action-btn" title="View live page">👁️</a>
                   <a href="{% url 'dashboard:project_edit' proj.pk %}" class="action-btn" title="Edit project">✏️</a>
                   <a href="{% url 'dashboard:project_delete' proj.pk %}" class="action-btn action-btn--danger" title="Delete project">🗑️</a>
@@ -95,7 +95,7 @@
             <tr>
               <td colspan="7" class="dash-empty-cell">
                 No projects found.
-                <div style="margin-top:10px;">
+                <div class="dash-table-note">
                   <a href="{% url 'dashboard:project_create' %}" class="btn btn--gold btn--sm">+ Add New Project</a>
                 </div>
               </td>

@@ -71,8 +71,8 @@
         <div class="solution-main">
 
           {% if solution.image %}
-            <div class="solution-featured-image" data-animate style="border-radius:var(--radius-xl); overflow:hidden; border:1px solid var(--clr-border); margin-bottom:var(--space-md);">
-              <img src="{{ solution.image.url }}" alt="{{ solution.title }}" style="width:100%; max-height:360px; object-fit:cover; display:block;" />
+            <div class="solution-featured-image" data-animate>
+              <img src="{{ solution.image.url }}" alt="{{ solution.title }}" />
             </div>
           {% endif %}
 

@@ -30,7 +30,7 @@
         <!-- Title -->
         <div class="form-group form-group--full">
           <label class="form-label" for="{{ form.title.id_for_label }}">
-            Article Title <span style="color:var(--clr-gold);">*</span>
+            Article Title <span class="required-star">*</span>
           </label>
           {{ form.title }}
           {% if form.title.errors %}<span class="form-error">{{ form.title.errors.0 }}</span>{% endif %}
@@ -39,7 +39,7 @@
         <!-- Slug -->
         <div class="form-group">
           <label class="form-label" for="{{ form.slug.id_for_label }}">
-            URL Slug <span style="color:var(--clr-gold);">*</span>
+            URL Slug <span class="required-star">*</span>
           </label>
           {{ form.slug }}
           <span class="form-hint">Unique identifier for the article URL.</span>
@@ -111,7 +111,7 @@
         <!-- Excerpt -->
         <div class="form-group form-group--full">
           <label class="form-label" for="{{ form.excerpt.id_for_label }}">
-            Short Excerpt <span style="color:var(--clr-gold);">*</span>
+            Short Excerpt <span class="required-star">*</span>
           </label>
           {{ form.excerpt }}
           <span class="form-hint">Displays on cards, search engines, and social media preview snippets.</span>
@@ -121,7 +121,7 @@
         <!-- Content -->
         <div class="form-group form-group--full">
           <label class="form-label" for="{{ form.content.id_for_label }}">
-            Full Article Content <span style="color:var(--clr-gold);">*</span>
+            Full Article Content <span class="required-star">*</span>
           </label>
           {{ form.content }}
           <span class="form-hint">Supports HTML markup (e.g. &lt;h2&gt;, &lt;p&gt;, &lt;ul&gt;, &lt;code&gt;, &lt;blockquote&gt;).</span>
@@ -135,7 +135,7 @@
             <span>Mark as Featured Article (Hero Placement)</span>
           </label>
 
-          <label class="form-checkbox-label" style="margin-left:2rem;">
+          <label class="form-checkbox-label dash-checkbox-spacing">
             {{ form.is_published }}
             <span>Published (Visible publicly on site)</span>
           </label>

@@ -123,7 +123,7 @@
           </div>
           <div class="blog-featured__visual" aria-hidden="true">
             {% if featured_post.image %}
-              <img src="{{ featured_post.image.url }}" alt="{{ featured_post.title }}" style="width:100%; height:100%; object-fit:cover; border-radius:inherit;" />
+              <img src="{{ featured_post.image.url }}" alt="{{ featured_post.title }}" />
             {% else %}
               <div class="blog-featured__icon-graphic">⚡</div>
             {% endif %}
@@ -137,8 +137,8 @@
           {% for post in posts %}
             <article class="blog-card" data-animate data-delay="100">
               {% if post.image %}
-                <div class="blog-card__thumb" style="height:170px; overflow:hidden; border-bottom:1px solid var(--clr-border);">
-                  <img src="{{ post.image.url }}" alt="{{ post.title }}" style="width:100%; height:100%; object-fit:cover;" />
+                <div class="blog-card__thumb">
+                  <img src="{{ post.image.url }}" alt="{{ post.title }}" />
                 </div>
               {% endif %}
               <div class="blog-card__body">
@@ -172,12 +172,12 @@
                 <!-- Footer -->
                 <div class="blog-card__footer">
                   <div class="blog-author">
-                    <div class="blog-author__avatar" style="width:32px; height:32px; font-size:0.7rem;" aria-hidden="true">
+                    <div class="blog-author__avatar blog-author__avatar--sm" aria-hidden="true">
                       {{ post.author_avatar }}
                     </div>
                     <div class="blog-author__info">
-                      <span class="blog-author__name" style="font-size:0.78rem;">{{ post.author }}</span>
-                      <span class="blog-author__role" style="font-size:0.68rem;">{{ post.published_date }}</span>
+                      <span class="blog-author__name blog-author__name--sm">{{ post.author }}</span>
+                      <span class="blog-author__role blog-author__role--xs">{{ post.published_date }}</span>
                     </div>
                   </div>
                   <a href="{% url 'blogs:blog_detail' post.slug %}" class="blog-read-link" aria-label="Read {{ post.title }}">
@@ -189,12 +189,12 @@
           {% endfor %}
         </div>
       {% else %}
-        <div style="text-align:center; padding: 4rem 1rem;" data-animate>
-          <div style="font-size:3rem; margin-bottom:1rem;" aria-hidden="true">🔍</div>
-          <h3 style="font-family:var(--font-display); font-size:1.4rem; color:var(--clr-text-primary); margin-bottom:0.5rem;">
+        <div class="blog-empty-state" data-animate>
+          <div class="blog-empty-state__icon" aria-hidden="true">🔍</div>
+          <h3 class="blog-empty-state__title">
             No Articles Found
           </h3>
-          <p style="color:var(--clr-text-muted); margin-bottom:1.5rem;">
+          <p class="blog-empty-state__desc">
             We couldn't find any articles matching your search criteria.
           </p>
           <a href="{% url 'blogs:blogs' %}" class="btn btn--outline">Reset Filters</a>
@@ -204,13 +204,13 @@
       <!-- NEWSLETTER SUBSCRIPTION -->
       <div class="blog-newsletter" data-animate data-delay="150">
         <div class="blog-newsletter__inner">
-          <div class="blog-badge" style="margin-bottom:1rem;">Stay Informed</div>
+          <div class="blog-badge blog-newsletter-badge">Stay Informed</div>
           <h2 class="blog-newsletter__heading">Insights Delivered to <span>Your Inbox</span></h2>
           <p class="blog-newsletter__sub">
             Join thousands of engineering leads, developers, and tech executives who receive
             our monthly breakdown of enterprise tech trends, architectural patterns, and security alerts.
           </p>
-          <form class="blog-newsletter__form" onsubmit="event.preventDefault(); alert('Thank you for subscribing to Cryptbyte Insights!');">
+          <form class="blog-newsletter__form" data-newsletter-form="true">
             <input
               type="email"
               class="blog-newsletter__input"

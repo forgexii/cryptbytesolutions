@@ -1,8 +1,34 @@
+import json
 from django import forms
-from blogs.models import BlogPost, BlogCategory
+from django.core.exceptions import ValidationError
+from blogs.models import BlogPost
 from solutions.models import Solution
 from projects.models import Project
 from teams.models import TeamMember, Department, Specialization
+
+MAX_UPLOAD_SIZE_BYTES = 10 * 1024 * 1024  # 10 MB limit to prevent resource exhaustion
+
+
+def validate_image_upload(image):
+    """Ensure uploaded images do not exceed safe size limits."""
+    if not image or not hasattr(image, 'size'):
+        return image
+    if image.size > MAX_UPLOAD_SIZE_BYTES:
+        raise ValidationError("Image file size must not exceed 10 MB.")
+    return image
+
+
+def validate_json_array(value, field_label):
+    """Validate that text content is a valid JSON array."""
+    if not value or not str(value).strip():
+        return '[]'
+    try:
+        parsed = json.loads(value)
+        if not isinstance(parsed, list):
+            raise ValidationError(f"{field_label} must be a valid JSON array format.")
+        return value
+    except (json.JSONDecodeError, ValueError):
+        raise ValidationError(f"{field_label} contains invalid JSON syntax.")
 
 
 class BlogPostForm(forms.ModelForm):
@@ -29,6 +55,9 @@ class BlogPostForm(forms.ModelForm):
             'is_featured': forms.CheckboxInput(attrs={'class': 'form-checkbox'}),
             'is_published': forms.CheckboxInput(attrs={'class': 'form-checkbox'}),
         }
+
+    def clean_image(self):
+        return validate_image_upload(self.cleaned_data.get('image'))
 
 
 class SolutionForm(forms.ModelForm):
@@ -62,6 +91,21 @@ class SolutionForm(forms.ModelForm):
             'is_published': forms.CheckboxInput(attrs={'class': 'form-checkbox'}),
         }
 
+    def clean_image(self):
+        return validate_image_upload(self.cleaned_data.get('image'))
+
+    def clean_metrics_json(self):
+        return validate_json_array(self.cleaned_data.get('metrics_json'), 'Metrics JSON')
+
+    def clean_challenges_json(self):
+        return validate_json_array(self.cleaned_data.get('challenges_json'), 'Challenges JSON')
+
+    def clean_capabilities_json(self):
+        return validate_json_array(self.cleaned_data.get('capabilities_json'), 'Capabilities JSON')
+
+    def clean_roadmap_json(self):
+        return validate_json_array(self.cleaned_data.get('roadmap_json'), 'Roadmap JSON')
+
 
 class ProjectForm(forms.ModelForm):
     class Meta:
@@ -84,6 +128,21 @@ class ProjectForm(forms.ModelForm):
             'is_published': forms.CheckboxInput(attrs={'class': 'form-checkbox'}),
         }
 
+    def clean_image(self):
+        return validate_image_upload(self.cleaned_data.get('image'))
+
+    def clean_metrics_json(self):
+        return validate_json_array(self.cleaned_data.get('metrics_json'), 'Metrics JSON')
+
+    def clean_challenges_json(self):
+        return validate_json_array(self.cleaned_data.get('challenges_json'), 'Challenges JSON')
+
+    def clean_capabilities_json(self):
+        return validate_json_array(self.cleaned_data.get('capabilities_json'), 'Capabilities JSON')
+
+    def clean_roadmap_json(self):
+        return validate_json_array(self.cleaned_data.get('roadmap_json'), 'Roadmap JSON')
+
 
 class TeamMemberForm(forms.ModelForm):
     class Meta:
@@ -91,7 +150,7 @@ class TeamMemberForm(forms.ModelForm):
         fields = [
             'name', 'role', 'department', 'department_name', 'specializations',
             'bio', 'initials', 'skills', 'image', 'linkedin_url', 'github_url',
-            'twitter_url', 'order', 'is_leadership'
+            'twitter_url', 'portfolio_url', 'order', 'is_leadership'
         ]
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-input', 'placeholder': 'e.g. Alex Chen'}),
@@ -105,9 +164,13 @@ class TeamMemberForm(forms.ModelForm):
             'linkedin_url': forms.URLInput(attrs={'class': 'form-input', 'placeholder': 'https://linkedin.com/in/...'}),
             'github_url': forms.URLInput(attrs={'class': 'form-input', 'placeholder': 'https://github.com/...'}),
             'twitter_url': forms.URLInput(attrs={'class': 'form-input', 'placeholder': 'https://x.com/...'}),
+            'portfolio_url': forms.URLInput(attrs={'class': 'form-input', 'placeholder': 'https://yourportfolio.com'}),
             'order': forms.NumberInput(attrs={'class': 'form-input', 'min': 0}),
             'is_leadership': forms.CheckboxInput(attrs={'class': 'form-checkbox'}),
         }
+
+    def clean_image(self):
+        return validate_image_upload(self.cleaned_data.get('image'))
 
 
 class DepartmentForm(forms.ModelForm):
@@ -121,6 +184,9 @@ class DepartmentForm(forms.ModelForm):
             'order': forms.NumberInput(attrs={'class': 'form-input', 'min': 0}),
         }
 
+    def clean_image(self):
+        return validate_image_upload(self.cleaned_data.get('image'))
+
 
 class SpecializationForm(forms.ModelForm):
     class Meta:
@@ -133,4 +199,7 @@ class SpecializationForm(forms.ModelForm):
             'description': forms.Textarea(attrs={'class': 'form-textarea', 'rows': 3, 'placeholder': 'Specific technical competencies and domain focus'}),
             'order': forms.NumberInput(attrs={'class': 'form-input', 'min': 0}),
         }
+
+    def clean_image(self):
+        return validate_image_upload(self.cleaned_data.get('image'))
 

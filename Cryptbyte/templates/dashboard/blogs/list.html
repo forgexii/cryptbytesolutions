@@ -22,7 +22,7 @@
             placeholder="Search articles by title, author, tag, or category..."
           />
         </div>
-        <select name="status" class="dash-select" onchange="this.form.submit()">
+        <select name="status" class="dash-select" data-auto-submit="true">
           <option value="all" {% if status_filter == 'all' %}selected{% endif %}>All Statuses</option>
           <option value="published" {% if status_filter == 'published' %}selected{% endif %}>Published Only</option>
           <option value="draft" {% if status_filter == 'draft' %}selected{% endif %}>Drafts Only</option>
@@ -41,13 +41,13 @@
       <table class="dash-table">
         <thead>
           <tr>
-            <th style="width:50px;">Media</th>
+            <th class="dash-col-avatar">Media</th>
             <th>Title &amp; Excerpt</th>
             <th>Category</th>
             <th>Author</th>
             <th>Status</th>
             <th>Date</th>
-            <th style="text-align:right;">Actions</th>
+            <th class="text-right">Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -83,7 +83,7 @@
                 <span class="dash-row-sub">{{ post.published_date }}</span>
               </td>
               <td>
-                <div class="dash-actions-cell" style="justify-content:flex-end;">
+                <div class="dash-actions-cell justify-end">
                   <a href="{% url 'blogs:blog_detail' post.slug %}" class="action-btn" title="View live page">👁️</a>
                   <a href="{% url 'dashboard:blog_edit' post.pk %}" class="action-btn" title="Edit article">✏️</a>
                   <a href="{% url 'dashboard:blog_delete' post.pk %}" class="action-btn action-btn--danger" title="Delete article">🗑️</a>
@@ -94,7 +94,7 @@
             <tr>
               <td colspan="7" class="dash-empty-cell">
                 No blog articles found matching your criteria.
-                <div style="margin-top:10px;">
+                <div class="dash-table-note">
                   <a href="{% url 'dashboard:blog_create' %}" class="btn btn--gold btn--sm">+ Publish New Article</a>
                 </div>
               </td>

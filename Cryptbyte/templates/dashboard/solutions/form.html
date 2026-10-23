@@ -30,7 +30,7 @@
         <!-- Title -->
         <div class="form-group form-group--full">
           <label class="form-label" for="{{ form.title.id_for_label }}">
-            Solution Title <span style="color:var(--clr-gold);">*</span>
+            Solution Title <span class="required-star">*</span>
           </label>
           {{ form.title }}
           {% if form.title.errors %}<span class="form-error">{{ form.title.errors.0 }}</span>{% endif %}
@@ -39,7 +39,7 @@
         <!-- Slug -->
         <div class="form-group">
           <label class="form-label" for="{{ form.slug.id_for_label }}">
-            URL Slug <span style="color:var(--clr-gold);">*</span>
+            URL Slug <span class="required-star">*</span>
           </label>
           {{ form.slug }}
           {% if form.slug.errors %}<span class="form-error">{{ form.slug.errors.0 }}</span>{% endif %}
@@ -80,7 +80,7 @@
         <!-- Tagline -->
         <div class="form-group form-group--full">
           <label class="form-label" for="{{ form.tagline.id_for_label }}">
-            Tagline Proposition <span style="color:var(--clr-gold);">*</span>
+            Tagline Proposition <span class="required-star">*</span>
           </label>
           {{ form.tagline }}
           {% if form.tagline.errors %}<span class="form-error">{{ form.tagline.errors.0 }}</span>{% endif %}
@@ -89,7 +89,7 @@
         <!-- Short Description -->
         <div class="form-group form-group--full">
           <label class="form-label" for="{{ form.short_desc.id_for_label }}">
-            Short Description <span style="color:var(--clr-gold);">*</span>
+            Short Description <span class="required-star">*</span>
           </label>
           {{ form.short_desc }}
           <span class="form-hint">Shown on solutions catalog cards.</span>

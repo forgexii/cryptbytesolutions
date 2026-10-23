@@ -30,7 +30,7 @@
         <!-- Title -->
         <div class="form-group form-group--full">
           <label class="form-label" for="{{ form.title.id_for_label }}">
-            Project Title <span style="color:var(--clr-gold);">*</span>
+            Project Title <span class="required-star">*</span>
           </label>
           {{ form.title }}
           {% if form.title.errors %}<span class="form-error">{{ form.title.errors.0 }}</span>{% endif %}
@@ -39,7 +39,7 @@
         <!-- Slug -->
         <div class="form-group">
           <label class="form-label" for="{{ form.slug.id_for_label }}">
-            URL Slug <span style="color:var(--clr-gold);">*</span>
+            URL Slug <span class="required-star">*</span>
           </label>
           {{ form.slug }}
           {% if form.slug.errors %}<span class="form-error">{{ form.slug.errors.0 }}</span>{% endif %}
@@ -99,7 +99,7 @@
         <!-- Description -->
         <div class="form-group form-group--full">
           <label class="form-label" for="{{ form.description.id_for_label }}">
-            Detailed Description <span style="color:var(--clr-gold);">*</span>
+            Detailed Description <span class="required-star">*</span>
           </label>
           {{ form.description }}
           {% if form.description.errors %}<span class="form-error">{{ form.description.errors.0 }}</span>{% endif %}
@@ -112,7 +112,7 @@
             <span>Mark as Featured Project</span>
           </label>
 
-          <label class="form-checkbox-label" style="margin-left:2rem;">
+          <label class="form-checkbox-label dash-checkbox-spacing">
             {{ form.is_published }}
             <span>Published (Visible publicly on portfolio)</span>
           </label>

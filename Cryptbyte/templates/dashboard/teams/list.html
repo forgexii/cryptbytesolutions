@@ -24,14 +24,14 @@
           />
         </div>
 
-        <select name="department" class="dash-select" onchange="this.form.submit()">
+        <select name="department" class="dash-select" data-auto-submit="true">
           <option value="all" {% if dept_filter == 'all' %}selected{% endif %}>All Departments</option>
           {% for d in departments %}
             <option value="{{ d.slug }}" {% if dept_filter == d.slug %}selected{% endif %}>{{ d.name }}</option>
           {% endfor %}
         </select>
 
-        <select name="specialization" class="dash-select" onchange="this.form.submit()">
+        <select name="specialization" class="dash-select" data-auto-submit="true">
           <option value="all" {% if spec_filter == 'all' %}selected{% endif %}>All Specializations</option>
           {% for s in specializations %}
             <option value="{{ s.slug }}" {% if spec_filter == s.slug %}selected{% endif %}>{{ s.name }}</option>
@@ -52,13 +52,13 @@
       <table class="dash-table">
         <thead>
           <tr>
-            <th style="width:50px;">Photo</th>
+            <th class="dash-col-avatar">Photo</th>
             <th>Name &amp; Role</th>
             <th>Department</th>
             <th>Specializations</th>
             <th>Role Type</th>
             <th>Order</th>
-            <th style="text-align:right;">Actions</th>
+            <th class="text-right">Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -66,14 +66,19 @@
             <tr>
               <td>
                 {% if member.image %}
-                  <img src="{{ member.image.url }}" alt="{{ member.name }}" class="dash-thumb-img" style="border-radius:50%;" />
+                  <img src="{{ member.image.url }}" alt="{{ member.name }}" class="dash-thumb-img dash-avatar--circle" />
                 {% else %}
                   <div class="dash-thumb-avatar" aria-hidden="true">{{ member.initials }}</div>
                 {% endif %}
               </td>
               <td>
                 <strong class="dash-row-title">{{ member.name }}</strong>
-                <span class="dash-row-sub">{{ member.role }}</span>
+                <span class="dash-row-sub">
+                  {{ member.role }}
+                  {% if member.portfolio_url %}
+                    · <a href="{{ member.portfolio_url }}" target="_blank" rel="noopener noreferrer" class="dash-row-sub" title="Portfolio">🌐 Portfolio</a>
+                  {% endif %}
+                </span>
               </td>
               <td>
                 <span class="badge badge--purple">{{ member.display_department }}</span>
@@ -81,7 +86,7 @@
               <td>
                 <div class="dash-specs-cell">
                   {% for spec in member.specializations.all %}
-                    <span class="badge badge--blue" style="font-size:0.68rem; margin:2px 2px 2px 0;">{{ spec.name }}</span>
+                    <span class="badge badge--blue dash-spec-pill">{{ spec.name }}</span>
                   {% empty %}
                     <span class="dash-row-sub">General</span>
                   {% endfor %}
@@ -96,7 +101,7 @@
               </td>
               <td><span class="dash-row-sub">{{ member.order }}</span></td>
               <td>
-                <div class="dash-actions-cell" style="justify-content:flex-end;">
+                <div class="dash-actions-cell justify-end">
                   <a href="{% url 'teams:team_detail' member.pk %}" class="action-btn" title="View profile">👁️</a>
                   <a href="{% url 'dashboard:team_edit' member.pk %}" class="action-btn" title="Edit member">✏️</a>
                   <a href="{% url 'dashboard:team_delete' member.pk %}" class="action-btn action-btn--danger" title="Delete member">🗑️</a>
@@ -107,7 +112,7 @@
             <tr>
               <td colspan="7" class="dash-empty-cell">
                 No team members found.
-                <div style="margin-top:10px;">
+                <div class="dash-table-note">
                   <a href="{% url 'dashboard:team_create' %}" class="btn btn--gold btn--sm">+ Add Team Member</a>
                 </div>
               </td>
